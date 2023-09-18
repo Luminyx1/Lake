@@ -1,0 +1,3 @@
+[submodule "Lake/vendor/glfw"]
+	path = Lake/vendor/glfw
+	url = https://github.com/TheCherno/glfw
