@@ -39,6 +39,9 @@
 *.tlog
 *.idb
 *.pdb
+*.sln
+*.vcxproj
+*.ilk
 
 # Misc
 .vscode/
