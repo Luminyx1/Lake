@@ -1,3 +1,9 @@
 [submodule "Lake/vendor/glfw"]
 	path = Lake/vendor/glfw
 	url = https://github.com/TheCherno/glfw
+[submodule "Lake/vendor/glm"]
+	path = Lake/vendor/glm
+	url = https://github.com/g-truc/glm
+[submodule "Lake/vendor/glad"]
+	path = Lake/vendor/glad
+	url = https://github.com/Lumis-Submodules/glad

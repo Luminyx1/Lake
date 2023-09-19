@@ -1,5 +1,5 @@
-project "Lake"
-    kind "StaticLib"
+project "Sandbox"
+    kind "ConsoleApp"
     language "C++"
     cppdialect "C++20"
     staticruntime "off"
@@ -8,24 +8,16 @@ project "Lake"
     objdir ("bin/%{prj.name}-%{cfg.buildcfg}/int")
 
     links {
-        "GLFW",
-        "glad",
+        "Lake"
     }
 
     includedirs {
         "include",
-
-        "vendor/glad/include",
-        "vendor/glfw/include",
-        "vendor/glm/"
+        "../Lake/include",
     }
 
     files {
         "src/**.cpp",
-    }
-
-    defines {
-        "LK_INTERNAL"
     }
 
     filter "system:windows"
@@ -51,6 +43,3 @@ project "Lake"
         runtime "Release"
         optimize "on"
         symbols "off"
-
-include "vendor/glfw"
-include "vendor/glad"

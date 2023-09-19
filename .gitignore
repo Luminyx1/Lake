@@ -40,5 +40,9 @@
 *.idb
 *.pdb
 
+# Misc
+.vscode/
+notes/
+
 # Exclude
 !premake5.exe
