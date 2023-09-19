@@ -17,7 +17,8 @@ project "Lake"
 
         "vendor/glad/include",
         "vendor/glfw/include",
-        "vendor/glm/"
+        "vendor/glm/",
+        "vendor/imgui"
     }
 
     files {

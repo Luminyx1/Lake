@@ -7,3 +7,7 @@
 [submodule "Lake/vendor/glad"]
 	path = Lake/vendor/glad
 	url = https://github.com/Lumis-Submodules/glad
+[submodule "lake/vendor/imgui"]
+	path = lake/vendor/imgui
+	url = https://github.com/ocornut/imgui
+	branch = docking

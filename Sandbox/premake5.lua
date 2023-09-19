@@ -14,6 +14,12 @@ project "Sandbox"
     includedirs {
         "include",
         "../Lake/include",
+
+        -- TODO: Should probably automate this
+        "../Lake/vendor/glad/include",
+        "../Lake/vendor/glfw/include",
+        "../Lake/vendor/glm/",
+        "../Lake/vendor/imgui"
     }
 
     files {

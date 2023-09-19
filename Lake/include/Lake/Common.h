@@ -1,5 +1,27 @@
 #pragma once
 
+#ifdef _MSC_VER
+    #define LK_COMPILER_MSVC
+#else
+    #error "Unsupported compiler"
+#endif
+
+#ifdef LK_COMPILER_MSVC
+    #define _CRT_SECURE_NO_WARNINGS
+
+    #ifdef LK_SHARED
+        #ifdef LK_INTERNAL
+            #define LK_API __declspec(dllexport)
+        #else
+            #define LK_API __declspec(dllimport)
+        #endif
+    #else
+        #define LK_API
+    #endif
+
+    #define LK_BREAKPOINT() __debugbreak()
+#endif
+
 #include <cstdint>
 
 using u8 = std::uint8_t;
@@ -28,12 +50,6 @@ static_assert(sizeof(i64) == 8, "i64 is not 8 bytes");
 static_assert(sizeof(f32) == 4, "f32 is not 4 bytes");
 static_assert(sizeof(f64) == 8, "f64 is not 8 bytes");
 
-#ifdef LK_SHARED
-    #ifdef LK_INTERNAL
-        #define LK_API __declspec(dllexport)
-    #else
-        #define LK_API __declspec(dllimport)
-    #endif
-#else
-    #define LK_API
-#endif
+#include <cstring>
+
+#define LK_FILENAME (std::strrchr(__FILE__, '\\') ? std::strrchr(__FILE__, '\\') + 1 : __FILE__)

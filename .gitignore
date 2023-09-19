@@ -46,6 +46,7 @@
 # Misc
 .vscode/
 notes/
+*.ini
 
 # Exclude
 !premake5.exe
