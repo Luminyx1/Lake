@@ -42,6 +42,8 @@
 *.sln
 *.vcxproj
 *.ilk
+*.iobj
+*.ipdb
 
 # Misc
 .vscode/
