@@ -16,7 +16,6 @@ public:
     }
 
     void onUpdate(const f32 ts) override {
-        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
         ImGui::ShowDemoWindow();
     }
 };

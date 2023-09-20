@@ -6,18 +6,6 @@
 
 namespace lake {
 
-    extern Application* createApplication();
-
-    int main(int argc, char** argv) {
-        Application* app = createApplication();
-        app->run();
-        delete app;
-
-        return 0;
-    }
+    Application* createApplication();
 
 } // namespace lake
-
-int main(int argc, char** argv) {
-    return lake::main(argc, argv);
-}
