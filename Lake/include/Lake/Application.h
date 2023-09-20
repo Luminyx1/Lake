@@ -1,18 +1,19 @@
 #pragma once
 
 #include "Lake/Common.h"
+#include "Lake/Graphics.h"
 
-namespace Lake {
+namespace lake {
     
-    extern int lmain(int argc, char** argv);
+    extern int main(int argc, char** argv);
 
     class LK_API Application {
     private:
-        friend int Lake::lmain(int argc, char** argv);
+        friend int lake::main(int argc, char** argv);
     
     public:
         struct Properties {
-            struct {
+            struct WindowProperties {
                 u32 width, height;
             } window;
         };
@@ -21,13 +22,14 @@ namespace Lake {
         Application(const Properties& properties);
         virtual ~Application();
         
-        virtual void OnUpdate(const f32 ts) = 0;
+        virtual void onUpdate(const f32 ts) = 0;
 
     private:
         void run();
 
-        f32 mTimeStep, mFrameTime, mLastFrameTime;
+    protected:
+        Graphics mGraphics;
     };
 
 
-} // namespace Lake
+} // namespace lake

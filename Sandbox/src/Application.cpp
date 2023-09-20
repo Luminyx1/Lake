@@ -1,23 +1,27 @@
 #include "Lake/EntryPoint.h"
 
+#include "Lake/ImGuiLayer.h"
+
 #include <imgui.h>
 
-class SandboxApp : public Lake::Application {
+class SandboxApp : public lake::Application {
 public:
-    SandboxApp(const Lake::Application::Properties& properties)
-        : Lake::Application(properties)
+    SandboxApp(const lake::Application::Properties& properties)
+        : lake::Application(properties)
     {
-        extern void SetupImGuiStyle();
+        mGraphics.getLayerStack().pushLayer<lake::ImGuiLayer>("ImGui");
 
-        SetupImGuiStyle();
+        extern void setupImGuiStyle();
+        setupImGuiStyle();
     }
 
-    void OnUpdate(const f32 ts) override {
+    void onUpdate(const f32 ts) override {
+        ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
         ImGui::ShowDemoWindow();
     }
 };
 
-Lake::Application* Lake::createApplication() {
+lake::Application* lake::createApplication() {
     return new SandboxApp({
         .window = {
             .width = 1920,

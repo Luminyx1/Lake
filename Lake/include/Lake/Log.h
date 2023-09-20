@@ -5,7 +5,7 @@
 #include <array>
 #include <iostream>
 
-namespace Lake {
+namespace lake {
 
     namespace LogColor {
         // Formatting
@@ -34,7 +34,7 @@ namespace Lake {
         static const char* LightMagenta = "\33[95m";
         static const char* LightCyan    = "\33[96m";
         static const char* White        = "\33[97m";
-    }
+    } // namespace LogColor
 
     namespace internal {
         template <typename T>
@@ -54,77 +54,54 @@ namespace Lake {
             std::strftime(buffer.data(), buffer.size(), "%H:%M:%S", std::localtime(&time));
             std::cout << "[" << buffer.data() << "] ";
         }
-    }
+
+        template <typename... Args>
+        void logEntry(const char* color, const char* type, Args... args) {
+            printTime();
+            std::cout << color <<
+            #ifdef LK_INTERNAL
+                "[lake/"
+            #else
+                "[app/"
+            #endif
+            << type << "]: ";
+            print(args...);
+            std::cout << LogColor::Reset << std::endl;
+        }
+    } // namespace internal
 
     template <typename... Args>
     void trace(Args... args) {
         #ifndef LK_DISABLE_LOG_TRACE
-            internal::printTime(); std::cout << LogColor::Gray <<
-            #ifdef LK_INTERNAL
-                "[lake/TRACE]: "
-            #else
-                "[app/TRACE]: "
-            #endif
-            ; internal::print(args...);
-            std::cout << LogColor::Reset << std::endl;
-        #else
-            (void)args;
+            internal::logEntry(LogColor::Gray, "TRACE", args...);
         #endif
     }
 
     template <typename... Args>
     void info(Args... args) {
         #ifndef LK_DISABLE_LOG_INFO
-            internal::printTime(); std::cout <<
-            #ifdef LK_INTERNAL
-                "[lake/INFO]: "
-            #else
-                "[app/INFO]: "
-            #endif
-            ; internal::print(args...);
-            std::cout << std::endl;
-        #else
-            (void)args;
+            internal::logEntry(LogColor::White, "INFO", args...);
         #endif
     }
-
 
     template <typename... Args>
     void warn(Args... args) {
         #ifndef LK_DISABLE_LOG_WARN
-            internal::printTime(); std::cout << LogColor::Yellow <<
-            #ifdef LK_INTERNAL
-                "[lake/WARN]: "
-            #else
-                "[app/WARN]: "
-            #endif
-            ; internal::print(args...);
-            std::cout << LogColor::Reset << std::endl;
-        #else
-            (void)args;
+            internal::logEntry(LogColor::Yellow, "WARN", args...);
         #endif
     }
 
     template <typename... Args>
     void error(Args... args) {
         #ifndef LK_DISABLE_LOG_ERROR
-            internal::printTime(); std::cout << LogColor::Red <<
-            #ifdef LK_INTERNAL
-                "[lake/ERROR]: "
-            #else
-                "[app/ERROR]: "
-            #endif
-            ; internal::print(args...);
-            std::cout << LogColor::Reset << std::endl;
-        #else
-            (void)args;
+            internal::logEntry(LogColor::Red, "ERROR", args...);
         #endif
     }
 
-}
+} // namespace lake
 
 #ifndef LK_DIST
-    #define LK_ASSERT(x, ...) do { if (!(x)) { Lake::error(LK_FILENAME, "(", __LINE__, "): Assert failed! ", __VA_ARGS__ ); LK_BREAKPOINT(); } } while (false)
+    #define LK_ASSERT(x, ...) do { if (!(x)) { lake::error(LK_FILENAME, "(", __LINE__, "): Assert failed! ", __VA_ARGS__ ); LK_BREAKPOINT(); } } while (false)
 #else
     #define LK_ASSERT(x, ...) do { (void)(x); } while (false)
 #endif

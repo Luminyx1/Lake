@@ -1,6 +1,6 @@
 -- premake5.lua
 workspace "Lake"
-    architecture "x64"
+    architecture "x86_64"
     configurations { "Debug", "Release", "Dist" }
     startproject "Sandbox"
 

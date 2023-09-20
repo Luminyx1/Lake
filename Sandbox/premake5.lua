@@ -26,6 +26,12 @@ project "Sandbox"
         "src/**.cpp",
     }
 
+    flags {
+        "MultiProcessorCompile",
+        "ShadowedVariables",
+        "FatalWarnings"
+    }
+
     filter "system:windows"
         systemversion "latest"
         defines {
@@ -41,11 +47,21 @@ project "Sandbox"
     filter "configurations:Release"
         defines "LK_RELEASE"
         runtime "Release"
-        optimize "on"
+        optimize "speed"
         symbols "on"
+        flags {
+            "LinkTimeOptimization"
+        }
     
     filter "configurations:Dist"
-        defines "LK_DIST"
+        defines {
+            "LK_DIST",
+            "LK_DISABLE_LOG_TRACE",
+            "LK_DISABLE_LOG_INFO"
+        }
         runtime "Release"
-        optimize "on"
+        optimize "speed"
         symbols "off"
+        flags {
+            "LinkTimeOptimization"
+        }

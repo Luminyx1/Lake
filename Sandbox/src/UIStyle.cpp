@@ -1,6 +1,6 @@
 #include <imgui.h>
 
-void SetupImGuiStyle() {
+void setupImGuiStyle() {
 	// Dark Ruda style
 	ImGuiStyle& style = ImGui::GetStyle();
 

@@ -1,0 +1,78 @@
+#include "Lake/Layer.h"
+
+lake::Layer::Layer(const std::string& name)
+    : mDrawables()
+    , mName(name)
+{ }
+
+lake::LayerStack::LayerStack()
+    : mLayers()
+{ }
+
+lake::LayerStack::~LayerStack() {
+    this->clearLayers();
+}
+
+void lake::LayerStack::popLayer() {
+    if (!mLayers.empty()) {
+        delete mLayers.back().second;
+        mLayers.pop_back();
+    }
+}
+
+void lake::LayerStack::removeLayer(const std::string& name) {
+    const std::size_t targetHash = std::hash<std::string>{}(name);
+
+    auto it = this->getLayerIterator(targetHash);
+
+    if (it != mLayers.end()) {
+        delete it->second;
+        mLayers.erase(it);
+    }
+}
+
+void lake::LayerStack::clearLayers() {
+    for (auto& [hash, layer] : mLayers) {
+        delete layer;
+    }
+
+    mLayers.clear();
+}
+
+lake::Layer* lake::LayerStack::getLayer(const std::string& name) {
+    const std::size_t targetHash = std::hash<std::string>{}(name);
+
+    auto it = this->getLayerIterator(targetHash);
+
+    if (it != mLayers.end()) {
+        return it->second;
+    }
+
+    return nullptr;
+}
+
+void lake::LayerStack::resizeLayers(const glm::u32vec2& size) {
+    for (auto& [hash, layer] : mLayers) {
+        layer->resize(size);
+    }
+}
+
+void lake::LayerStack::pushDrawable(Drawable* drawable, const std::size_t layerHash) {
+    auto it = this->getLayerIterator(layerHash);
+
+    if (it != mLayers.end()) {
+        it->second->mDrawables.push_back(drawable);
+    }
+}
+
+void lake::LayerStack::drawLayers() const {
+    for (const auto& [hash, layer] : mLayers) {
+        layer->draw();
+    }
+}
+
+lake::LayerStack::LayerContainer::iterator lake::LayerStack::getLayerIterator(const std::size_t hash) {
+    return std::find_if(mLayers.begin(), mLayers.end(), [hash](const auto& pair) {
+        return pair.first == hash;
+    });
+}

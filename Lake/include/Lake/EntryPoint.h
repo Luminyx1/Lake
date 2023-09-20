@@ -4,11 +4,11 @@
 
 #include "Lake/Application.h"
 
-namespace Lake {
+namespace lake {
 
     extern Application* createApplication();
 
-    int lmain(int argc, char** argv) {
+    int main(int argc, char** argv) {
         Application* app = createApplication();
         app->run();
         delete app;
@@ -16,8 +16,8 @@ namespace Lake {
         return 0;
     }
 
-} // namespace Lake
+} // namespace lake
 
 int main(int argc, char** argv) {
-    return Lake::lmain(argc, argv);
+    return lake::main(argc, argv);
 }
