@@ -1,5 +1,7 @@
 #include "Lake/Layer.h"
 
+#include "Lake/Log.h"
+
 lake::Layer::Layer(const std::string& name)
     : mDrawables()
     , mName(name)
@@ -28,6 +30,8 @@ void lake::LayerStack::removeLayer(const std::string& name) {
     if (it != mLayers.end()) {
         delete it->second;
         mLayers.erase(it);
+    } else {
+        lake::warn("Unable to remove nonexistent layer: ", name);
     }
 }
 
@@ -62,6 +66,8 @@ void lake::LayerStack::pushDrawable(Drawable* drawable, const std::size_t layerH
 
     if (it != mLayers.end()) {
         it->second->mDrawables.push_back(drawable);
+    } else {
+        lake::warn("Unable to push drawable to nonexistent layer: ", layerHash);
     }
 }
 

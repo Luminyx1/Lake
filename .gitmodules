@@ -11,3 +11,6 @@
 	path = Lake/vendor/imgui
 	url = https://github.com/ocornut/imgui
 	branch = docking
+[submodule "Lake/vendor/simdjson"]
+	path = Lake/vendor/simdjson
+	url = https://github.com/Lumis-Submodules/simdjson

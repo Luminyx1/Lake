@@ -1,0 +1,10 @@
+{
+    "entities": [
+        {
+            "identifier": "TestEntity",
+            "properties": {
+                "position": [0.0, 96.0, 420.0]
+            }
+        }
+    ]
+}

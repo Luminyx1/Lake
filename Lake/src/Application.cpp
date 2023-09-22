@@ -12,6 +12,7 @@ lake::Application::Application(const lake::Application::Properties& properties)
             .height = properties.window.height
         }
     })
+    , mScene(properties.initialScene)
 { }
 
 lake::Application::~Application() {
@@ -20,6 +21,10 @@ lake::Application::~Application() {
 
 void lake::Application::run() {
     while (mGraphics.update()) {
-        this->onUpdate(mGraphics.getTimeStep());
+        const f32 ts = mGraphics.getTimeStep();
+
+        this->onUpdate(ts);
+
+        mScene.update(ts);
     }
 }

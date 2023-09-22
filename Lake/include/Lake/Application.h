@@ -2,6 +2,7 @@
 
 #include "Lake/Common.h"
 #include "Lake/Graphics.h"
+#include "Lake/Scene.h"
 
 namespace lake {
     
@@ -16,6 +17,7 @@ namespace lake {
             struct WindowProperties {
                 u32 width, height;
             } window;
+            std::string initialScene;
         };
 
     public:
@@ -29,6 +31,7 @@ namespace lake {
 
     protected:
         Graphics mGraphics;
+        Scene mScene;
     };
 
 

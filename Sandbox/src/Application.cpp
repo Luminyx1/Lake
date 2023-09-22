@@ -4,7 +4,7 @@
 
 #include <imgui.h>
 
-class SandboxApp : public lake::Application {
+class SandboxApp final : public lake::Application {
 public:
     SandboxApp(const lake::Application::Properties& properties)
         : lake::Application(properties)
@@ -25,6 +25,7 @@ lake::Application* lake::createApplication() {
         .window = {
             .width = 1920,
             .height = 1080
-        }
+        },
+        .initialScene = "scene.json"
     });
 }

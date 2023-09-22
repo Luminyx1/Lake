@@ -3,9 +3,11 @@ project "Sandbox"
     language "C++"
     cppdialect "C++20"
     staticruntime "off"
+    vectorextensions "AVX2"
 
     targetdir ("bin/%{prj.name}-%{cfg.buildcfg}/out")
     objdir ("bin/%{prj.name}-%{cfg.buildcfg}/int")
+    debugdir "../workdir"
 
     links {
         "Lake"
@@ -19,7 +21,8 @@ project "Sandbox"
         "../Lake/vendor/glad/include",
         "../Lake/vendor/glfw/include",
         "../Lake/vendor/glm/",
-        "../Lake/vendor/imgui"
+        "../Lake/vendor/imgui",
+        "../Lake/vendor/simdjson/include"
     }
 
     files {
@@ -39,7 +42,10 @@ project "Sandbox"
         }
     
     filter "configurations:Debug"
-        defines "LK_DEBUG"
+        defines {
+            "LK_DEBUG",
+            "_DEBUG"
+        }
         runtime "Debug"
         optimize "off"
         symbols "on"

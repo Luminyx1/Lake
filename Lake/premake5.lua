@@ -3,6 +3,7 @@ project "Lake"
     language "C++"
     cppdialect "C++20"
     staticruntime "off"
+    vectorextensions "AVX2"
 
     targetdir ("bin/%{prj.name}-%{cfg.buildcfg}/out")
     objdir ("bin/%{prj.name}-%{cfg.buildcfg}/int")
@@ -10,6 +11,7 @@ project "Lake"
     links {
         "GLFW",
         "glad",
+        "simdjson"
     }
 
     includedirs {
@@ -18,7 +20,8 @@ project "Lake"
         "vendor/glad/include",
         "vendor/glfw/include",
         "vendor/glm/",
-        "vendor/imgui"
+        "vendor/imgui",
+        "vendor/simdjson/include"
     }
 
     files {
@@ -42,7 +45,10 @@ project "Lake"
         }
     
     filter "configurations:Debug"
-        defines "LK_DEBUG"
+        defines {
+            "LK_DEBUG",
+            "_DEBUG"
+        }
         runtime "Debug"
         optimize "off"
         symbols "on"
@@ -72,4 +78,5 @@ project "Lake"
 group "Dependencies"
     include "vendor/glfw"
     include "vendor/glad"
+    include "vendor/simdjson"
 group ""
