@@ -8,17 +8,6 @@
 
 #ifdef LK_COMPILER_MSVC
     #define _CRT_SECURE_NO_WARNINGS
-
-    #ifdef LK_SHARED
-        #ifdef LK_INTERNAL
-            #define LK_API __declspec(dllexport)
-        #else
-            #define LK_API __declspec(dllimport)
-        #endif
-    #else
-        #define LK_API
-    #endif
-
     #define LK_BREAKPOINT() __debugbreak()
 #endif
 

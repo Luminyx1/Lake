@@ -11,7 +11,7 @@
 
 namespace lake {
 
-    class LK_API Layer {
+    class Layer {
     public:
         Layer(const std::string& name);
         virtual ~Layer() = default;
@@ -26,7 +26,7 @@ namespace lake {
         const std::string mName;
     };
 
-    class LK_API LayerStack {
+    class LayerStack {
     public:
         LayerStack();
         ~LayerStack();

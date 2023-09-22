@@ -8,7 +8,7 @@
 
 namespace lake {
 
-    class LK_API Scene {
+    class Scene {
     public:
         Scene(const std::string& path);
         ~Scene();

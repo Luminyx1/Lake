@@ -8,7 +8,7 @@ namespace lake {
     
     extern int main(int argc, char** argv);
 
-    class LK_API Application {
+    class Application {
     private:
         friend int lake::main(int argc, char** argv);
     

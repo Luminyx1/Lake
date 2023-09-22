@@ -14,13 +14,13 @@ namespace lake {
 
     class Entity;
 
-    class LK_API EntityComponent {
+    class EntityComponent {
     public:
         EntityComponent() = default;
         virtual ~EntityComponent() = default;
     };
 
-    class LK_API Entity {
+    class Entity {
     public:
         struct Properties {
             glm::vec3 position;

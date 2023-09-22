@@ -4,7 +4,7 @@
 
 namespace lake {
 
-    class LK_API Drawable {
+    class Drawable {
     public:
         Drawable() = default;
         virtual ~Drawable() = default;

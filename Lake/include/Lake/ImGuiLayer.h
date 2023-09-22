@@ -8,7 +8,7 @@
 
 namespace lake {
 
-    class LK_API ImGuiLayer : public Layer {
+    class ImGuiLayer : public Layer {
     public:
         ImGuiLayer(const std::string& name);
         ~ImGuiLayer();

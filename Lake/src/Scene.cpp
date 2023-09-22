@@ -15,7 +15,7 @@ lake::Scene::Scene(const std::string& path) {
         for (auto entity : entities) {
             auto entityObject = entity.value().get_object();
 
-            const std::string_view identifier = entityObject["identifier"].get_string().value();
+            const std::string_view type = entityObject["type"].get_string().value();
             auto properties = entityObject["properties"].get_object();
 
             auto position = properties["position"].get_array();
@@ -31,9 +31,9 @@ lake::Scene::Scene(const std::string& path) {
             };
 
             const auto& registry = Entity::Registry::getRegistry();
-            const auto entityRegistration = registry.find(std::string{identifier});
+            const auto entityRegistration = registry.find(std::string{type});
             if (entityRegistration == registry.end()) {
-                lake::error("Entity '", identifier, "' not found in registry");
+                lake::error("Entity '", type, "' not found in registry");
                 continue;
             }
 

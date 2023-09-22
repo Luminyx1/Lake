@@ -6,7 +6,7 @@
 
 namespace lake {
 
-    class LK_API Graphics {
+    class Graphics {
     public:
         struct Properties {
             struct WindowProperties {

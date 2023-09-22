@@ -28,10 +28,6 @@ project "Lake"
         "src/**.cpp",
     }
 
-    defines {
-        "LK_INTERNAL"
-    }
-
     flags {
         "MultiProcessorCompile",
         "ShadowedVariables",
