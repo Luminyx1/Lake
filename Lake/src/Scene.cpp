@@ -39,8 +39,7 @@ lake::Scene::Scene(const std::string& path) {
 
             const auto& [name, data] = *entityRegistration;
 
-            Entity* entity = data.factory(entityProperties);
-            mEntities.push_back(entity);
+            mEntities.push_back(data.factory(entityProperties));
         }
     } catch (simdjson::simdjson_error& error) {
         lake::error("Error parsing scene file '", path, "': ", error.what());

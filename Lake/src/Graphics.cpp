@@ -3,7 +3,7 @@
 #include "Lake/Log.h"
 
 #include <glad/glad.h>
-#include <glfw/glfw3.h>
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
 lake::Graphics::Graphics(const lake::Graphics::Properties& properties)
