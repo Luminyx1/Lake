@@ -32,11 +32,10 @@ namespace lake {
         ~LayerStack();
 
         template<typename T>
-        T* pushLayer(const std::string& name) {
-            static_assert(std::is_base_of<Layer, T>::value, "T must derive from Layer");
-
+        T* pushLayer(const std::string& name) requires std::is_base_of_v<Layer, T> {
             T* layer = new T(name);
             mLayers.emplace_back(std::make_pair(std::hash<std::string>{}(name), layer));
+            
             return layer;
         }
 

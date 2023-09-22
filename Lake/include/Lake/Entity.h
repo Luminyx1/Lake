@@ -51,35 +51,27 @@ namespace lake {
         Entity(const Properties& properties);
         virtual ~Entity();
 
-        virtual void onUpdate(const f32 ts) { }
+        virtual void onUpdate(const f32 timeStep) { }
 
         template <typename T>
-        void addComponent(T* component) {
-            static_assert(std::is_base_of_v<EntityComponent, T>, "T must derive from EntityComponent");
-
+        void addComponent(T* component) requires std::is_base_of_v<EntityComponent, T> {
             mComponents[std::type_index(typeid(T))].push_back(component);
         }
 
         template <typename T>
-        void addComponent() {
-            static_assert(std::is_base_of_v<EntityComponent, T>, "T must derive from EntityComponent");
-
+        void addComponent() requires std::is_base_of_v<EntityComponent, T> {
             mComponents[std::type_index(typeid(T))].push_back(new T());
         }
 
         template <typename T>
-        std::span<T*> getComponents() {
-            static_assert(std::is_base_of_v<EntityComponent, T>, "T must derive from EntityComponent");
-
-            auto& components = mComponents[std::type_index(typeid(T))];
+        std::span<T*> getComponents() requires std::is_base_of_v<EntityComponent, T> {
+            std::vector<lake::EntityComponent*>& components = mComponents[std::type_index(typeid(T))];
 
             return std::span<T*>(reinterpret_cast<T**>(components.data()), components.size());
         }
 
         template <typename T>
-        bool hasComponent() {
-            static_assert(std::is_base_of_v<EntityComponent, T>, "T must derive from EntityComponent");
-
+        bool hasComponent() requires std::is_base_of_v<EntityComponent, T> {
             return mComponents.find(std::type_index(typeid(T))) != mComponents.end();
         }
 

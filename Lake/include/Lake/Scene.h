@@ -13,7 +13,7 @@ namespace lake {
         Scene(const std::string& path);
         ~Scene();
 
-        void update(const f32 ts);
+        void update(const f32 timeStep);
 
     private:
         std::vector<Entity*> mEntities;

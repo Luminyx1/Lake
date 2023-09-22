@@ -15,7 +15,7 @@ public:
         setupImGuiStyle();
     }
 
-    void onUpdate(const f32 ts) override {
+    void onUpdate(const f32 timeStep) override {
         ImGui::ShowDemoWindow();
     }
 };

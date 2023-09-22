@@ -30,10 +30,10 @@ public:
         lake::info("TestEntity::~TestEntity");
     }
 
-    void onUpdate(const f32 ts) override {
-        lake::info("TestEntity::onUpdate ts: ", ts, ", position: x.", mPosition.x, " y.", mPosition.y, " z.", mPosition.z);
+    void onUpdate(const f32 timeStep) override {
+        lake::info("TestEntity::onUpdate ts: ", timeStep, ", position: x.", mPosition.x, " y.", mPosition.y, " z.", mPosition.z);
 
-        auto exampleComponents = this->getComponents<ExampleComponent>();
+        std::span<ExampleComponent*> exampleComponents = this->getComponents<ExampleComponent>();
 
         for (auto& component : exampleComponents) {
             component->method();

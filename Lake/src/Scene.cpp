@@ -52,8 +52,8 @@ lake::Scene::~Scene() {
     }
 }
 
-void lake::Scene::update(const f32 ts) {
+void lake::Scene::update(const f32 timeStep) {
     for (auto& entity : mEntities) {
-        entity->onUpdate(ts);
+        entity->onUpdate(timeStep);
     }
 }
