@@ -10,8 +10,8 @@ public:
     SandboxApp(const lake::Application::Properties& properties)
         : lake::Application(properties)
     {
-        mGraphics.getLayerStack().pushLayer<lake::ImGuiLayer>("ImGui");
         mGraphics.getLayerStack().pushLayer<lake::Layer>("main");
+        mGraphics.getLayerStack().pushLayer<lake::ImGuiLayer>("ImGui");
 
         extern void setupImGuiStyle();
         setupImGuiStyle();

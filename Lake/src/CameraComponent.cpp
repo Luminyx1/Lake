@@ -15,6 +15,7 @@ void lake::CameraComponent::setView(const glm::vec3& position, const glm::vec3& 
     mView = glm::lookAt(position, lookTarget, up);
     
     mPosition = position;
+    mIsDirty = true;
 }
 
 lake::OrthographicCameraComponent::OrthographicCameraComponent(const glm::vec3& position, const glm::vec3& lookTarget, const glm::vec3& up, const f32 top, const f32 bottom, const f32 left, const f32 right, const f32 near, const f32 far)
