@@ -16,19 +16,7 @@ lake::Scene::Scene(const std::string& path) {
             auto entityObject = entity.value().get_object();
 
             const std::string_view type = entityObject["type"].get_string().value();
-            auto properties = entityObject["properties"].get_object();
-
-            auto position = properties["position"].get_array();
-
-            auto posIt = position.begin();
-
-            const f32 x = static_cast<f32>(f64(*posIt.value()));
-            const f32 y = static_cast<f32>(f64(*(++posIt).value()));
-            const f32 z = static_cast<f32>(f64(*(++posIt).value()));
-
-            const Entity::Properties entityProperties = {
-                .position = glm::vec3(x, y, z)
-            };
+            const lake::Entity::Properties properties = entityObject["properties"].get_object();
 
             const auto& registry = Entity::Registry::getRegistry();
             const auto entityRegistration = registry.find(std::string{type});
@@ -39,7 +27,7 @@ lake::Scene::Scene(const std::string& path) {
 
             const auto& [name, data] = *entityRegistration;
 
-            mEntities.push_back(data.factory(entityProperties));
+            mEntities.push_back(data.factory(properties));
         }
     } catch (simdjson::simdjson_error& error) {
         lake::error("Error parsing scene file '", path, "': ", error.what());

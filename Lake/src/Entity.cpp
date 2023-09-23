@@ -13,10 +13,6 @@ std::map<std::string, lake::Entity::Registry>& lake::Entity::Registry::getRegist
     return registry;
 }
 
-lake::Entity::Entity(const lake::Entity::Properties& properties) 
-    : mPosition(properties.position)
-{ }
-
 lake::Entity::~Entity() {
     for (auto& [type, vector] : mComponents) {
         for (auto& component : vector) {

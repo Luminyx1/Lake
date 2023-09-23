@@ -3,14 +3,16 @@
 #include "Lake/SpriteComponent.h"
 #include "Lake/CameraComponent.h"
 #include "Lake/Graphics.h"
+#include "Lake/JsonHelpers.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
 
 class TestEntity final : public lake::Entity {
 public:
-    TestEntity(const lake::Entity::Properties& properties)
-        : Entity(properties)
+    TestEntity(lake::Entity::Properties properties)
+        : Entity()
+        , mPosition(lake::json::getVec3(properties, "position"))
         , mRotation(0.0f)
     {
         lake::SpriteComponent* sprite = new lake::SpriteComponent("sprite.png");
@@ -39,6 +41,7 @@ public:
     }
 
 private:
+    glm::vec3 mPosition;
     f32 mRotation;
 };
 

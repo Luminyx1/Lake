@@ -9,6 +9,7 @@
 #include <vector>
 
 #include <glm/glm.hpp>
+#include <simdjson.h>
 
 namespace lake {
 
@@ -22,12 +23,10 @@ namespace lake {
 
     class Entity {
     public:
-        struct Properties {
-            glm::vec3 position;
-        };
+        using Properties = simdjson::simdjson_result<simdjson::haswell::ondemand::object>;
 
         struct Registry {
-            using entityFactory = Entity* (*)(const Properties& properties);
+            using entityFactory = Entity* (*)(Properties properties);
         
             Registry() = default;
             Registry(entityFactory factory, const std::string& identifier);
@@ -41,14 +40,14 @@ namespace lake {
         template <typename T>
         struct RegisterEntity : public Registry {
             RegisterEntity(const std::string& identifier)
-                : Registry([](const Properties& properties) -> Entity* {
+                : Registry([](Properties properties) -> Entity* {
                     return new T(properties);
                 }, identifier)
             { }
         };
 
     public:
-        Entity(const Properties& properties);
+        Entity() = default;
         virtual ~Entity();
 
         virtual void onUpdate(const f32 timeStep) { }
@@ -72,9 +71,6 @@ namespace lake {
 
     private:
         std::map<std::type_index, std::vector<EntityComponent*>> mComponents;
-    
-    protected:
-        glm::vec3 mPosition;
     };
 
 } // namespace lake
