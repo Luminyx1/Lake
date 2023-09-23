@@ -10,7 +10,7 @@ namespace lake {
 
     class SpriteComponent : public DrawableComponent {
     public:
-        SpriteComponent(const std::string& texturePath);
+        SpriteComponent(const std::string& texturePath, const Texture::FilterMode filterMode = Texture::FilterMode::Linear);
         ~SpriteComponent() override;
 
         void draw(const RenderInfo& renderInfo) override;

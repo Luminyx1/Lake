@@ -2,6 +2,10 @@
 
 #ifdef _MSC_VER
     #define LK_COMPILER_MSVC
+#elif defined(__clang__)
+    #define LK_COMPILER_CLANG
+#elif defined(__GNUC__)
+    #define LK_COMPILER_GCC
 #else
     #error "Unsupported compiler"
 #endif
@@ -9,6 +13,8 @@
 #ifdef LK_COMPILER_MSVC
     #define _CRT_SECURE_NO_WARNINGS
     #define LK_BREAKPOINT() __debugbreak()
+#elif defined(LK_COMPILER_CLANG) || defined(LK_COMPILER_GCC)
+    #define LK_BREAKPOINT() __builtin_trap()
 #endif
 
 #include <cstdint>

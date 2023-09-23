@@ -5,30 +5,13 @@
 
 #include <imgui.h>
 
-class RenderLayer final : public lake::Layer {
-public:
-    RenderLayer(const std::string& name)
-        : Layer(name)
-    { }
-
-    void draw() override {
-        lake::RenderInfo renderInfo = {
-            .camera = mCamera
-        };
-
-        for (auto& drawable : mDrawables) {
-            drawable->draw(renderInfo);
-        }
-    }
-};
-
 class SandboxApp final : public lake::Application {
 public:
     SandboxApp(const lake::Application::Properties& properties)
         : lake::Application(properties)
     {
         mGraphics.getLayerStack().pushLayer<lake::ImGuiLayer>("ImGui");
-        mGraphics.getLayerStack().pushLayer<RenderLayer>("main");
+        mGraphics.getLayerStack().pushLayer<lake::Layer>("main");
 
         extern void setupImGuiStyle();
         setupImGuiStyle();

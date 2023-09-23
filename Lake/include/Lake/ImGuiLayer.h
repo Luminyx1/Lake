@@ -13,7 +13,7 @@ namespace lake {
         ImGuiLayer(const std::string& name);
         ~ImGuiLayer();
 
-        void draw() override;
+        void draw(const RenderInfo& renderInfo) override;
     };
 
 } // namespace lake

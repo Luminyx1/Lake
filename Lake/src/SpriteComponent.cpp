@@ -48,9 +48,9 @@ namespace {
     }
 }
 
-lake::SpriteComponent::SpriteComponent(const std::string& texturePath)
+lake::SpriteComponent::SpriteComponent(const std::string& texturePath, const Texture::FilterMode filterMode)
     : mMatrix(1.0f)
-    , mTexture(texturePath)
+    , mTexture(texturePath, filterMode)
     , mShaderProgram("lake/assets/shaders/sprite.vsh", "lake/assets/shaders/sprite.fsh")
 { }
 
@@ -65,7 +65,6 @@ void lake::SpriteComponent::draw(const RenderInfo& renderInfo) {
 
     const auto& [vao, vbo, ebo] = getQuadObjects();
     glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

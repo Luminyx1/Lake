@@ -7,6 +7,16 @@ lake::Layer::Layer(const std::string& name)
     , mName(name)
 { }
 
+void lake::Layer::draw(const lake::RenderInfo& renderInfo) {
+    for (auto& drawable : mDrawables) {
+        drawable->draw(renderInfo);
+    }
+}
+
+void lake::Layer::resize(const glm::u32vec2& size) {
+
+}
+
 lake::LayerStack::LayerStack()
     : mLayers()
 { }
@@ -71,7 +81,11 @@ void lake::LayerStack::pushDrawable(DrawableComponent* drawable, const std::size
 
 void lake::LayerStack::drawLayers() const {
     for (const auto& [hash, layer] : mLayers) {
-        layer->draw();
+        const RenderInfo renderInfo = {
+            .camera = layer->getCamera()
+        };
+
+        layer->draw(renderInfo);
         layer->mDrawables.clear();
     }
 }

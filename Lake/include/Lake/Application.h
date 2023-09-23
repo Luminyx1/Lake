@@ -28,6 +28,7 @@ namespace lake {
 
     private:
         void run();
+        void intermoduleDataTransfer();
 
     protected:
         Graphics mGraphics;

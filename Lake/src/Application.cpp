@@ -21,6 +21,8 @@ lake::Application::~Application() {
 }
 
 void lake::Application::run() {
+    this->intermoduleDataTransfer();
+
     while (mGraphics.update()) {
         const f32 ts = mGraphics.getTimeStep();
 
@@ -28,6 +30,12 @@ void lake::Application::run() {
 
         mScene.update(ts);
 
+        this->intermoduleDataTransfer();
+    }
+}
+
+void lake::Application::intermoduleDataTransfer() {
+    { // Link graphics and scene
         const std::vector<Entity*>& entities = mScene.getEntities();
 
         for (auto& entity : entities) {        

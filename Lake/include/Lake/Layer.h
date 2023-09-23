@@ -17,8 +17,8 @@ namespace lake {
         Layer(const std::string& name);
         virtual ~Layer() = default;
 
-        virtual void draw() = 0;
-        virtual void resize(const glm::u32vec2& size) { }
+        virtual void draw(const RenderInfo& renderInfo);
+        virtual void resize(const glm::u32vec2& size);
 
         void setCamera(CameraComponent* camera) { mCamera = camera; }
         [[nodiscard]] CameraComponent* getCamera() const { return mCamera; }

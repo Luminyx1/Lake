@@ -59,11 +59,6 @@ namespace lake {
         }
 
         template <typename T>
-        void addComponent() requires std::is_base_of_v<EntityComponent, T> {
-            mComponents[std::type_index(typeid(T))].push_back(new T());
-        }
-
-        template <typename T>
         std::span<T*> getComponents() requires std::is_base_of_v<EntityComponent, T> {
             std::vector<lake::EntityComponent*>& components = mComponents[std::type_index(typeid(T))];
 

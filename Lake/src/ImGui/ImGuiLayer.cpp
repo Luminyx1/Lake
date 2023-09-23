@@ -25,7 +25,7 @@ lake::ImGuiLayer::~ImGuiLayer() {
     ImGui::DestroyContext();
 }
 
-void lake::ImGuiLayer::draw() {
+void lake::ImGuiLayer::draw(const lake::RenderInfo&) {
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
