@@ -38,12 +38,12 @@ void lake::Application::intermoduleDataTransfer() {
     { // Link graphics and scene
         const std::vector<Entity*>& entities = mScene.getEntities();
 
-        for (auto& entity : entities) {        
-            for (auto& drawableComponent : entity->getComponents<lake::DrawableComponent>()) {
+        for (auto entity : entities) {        
+            for (auto drawableComponent : entity->getComponents<lake::DrawableComponent>()) {
                 mGraphics.pushDrawable(drawableComponent, drawableComponent->getTargetLayerHash());
             }
 
-            for (auto& cameraComponent : entity->getComponents<lake::CameraComponent>()) {
+            for (auto cameraComponent : entity->getComponents<lake::CameraComponent>()) {
                 mGraphics.getLayerStack().getLayer(cameraComponent->getTargetLayerHash())->setCamera(cameraComponent);
             }
         }

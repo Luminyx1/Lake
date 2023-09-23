@@ -14,6 +14,8 @@ lake::ImGuiLayer::ImGuiLayer(const std::string& name)
     ImGui_ImplGlfw_InitForOpenGL(glfwGetCurrentContext(), true);
     ImGui_ImplOpenGL3_Init("#version 460");
 
+    ImGui::GetIO().Fonts->AddFontFromFileTTF("lake/assets/fonts/SegoeUI.ttf", 24.0f);
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
