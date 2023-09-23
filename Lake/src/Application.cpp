@@ -14,6 +14,7 @@ lake::Application::Application(const lake::Application::Properties& properties)
         }
     })
     , mScene(properties.initialScene)
+    , mPhysics()
 { }
 
 lake::Application::~Application() {
@@ -47,5 +48,18 @@ void lake::Application::intermoduleDataTransfer() {
                 mGraphics.getLayerStack().getLayer(cameraComponent->getTargetLayerHash())->setCamera(cameraComponent);
             }
         }
+    }
+    { // Link physics and scene
+        const std::vector<Entity*>& entities = mScene.getEntities();
+
+        std::vector<lake::CircleColliderComponent*> circleColliders; circleColliders.reserve(entities.size());
+
+        for (auto entity : entities) {
+            for (auto circleCollider : entity->getComponents<lake::CircleColliderComponent>()) {
+                circleColliders.push_back(circleCollider);
+            }
+        }
+
+        mPhysics.update(mGraphics.getTimeStep(), circleColliders);
     }
 }

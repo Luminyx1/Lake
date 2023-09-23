@@ -3,6 +3,7 @@
 #include "Lake/Common.h"
 #include "Lake/Graphics.h"
 #include "Lake/Scene.h"
+#include "Lake/Physics.h"
 
 namespace lake {
     
@@ -33,6 +34,7 @@ namespace lake {
     protected:
         Graphics mGraphics;
         Scene mScene;
+        Physics mPhysics;
     };
 
 
