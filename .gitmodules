@@ -14,3 +14,6 @@
 [submodule "Lake/vendor/simdjson"]
 	path = Lake/vendor/simdjson
 	url = https://github.com/Lumis-Submodules/simdjson
+[submodule "Lake/vendor/stb"]
+	path = Lake/vendor/stb
+	url = https://github.com/nothings/stb

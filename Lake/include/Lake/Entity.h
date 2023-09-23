@@ -17,7 +17,7 @@ namespace lake {
     class EntityComponent {
     public:
         EntityComponent() = default;
-        virtual ~EntityComponent() = default;
+        virtual ~EntityComponent() noexcept(false) = default;
     };
 
     class Entity {

@@ -2,7 +2,8 @@
 
 #include "Lake/Common.h"
 
-#include "Lake/Drawable.h"
+#include "Lake/DrawableComponent.h"
+#include "Lake/CameraComponent.h"
 
 #include "glm/glm.hpp"
 
@@ -19,11 +20,15 @@ namespace lake {
         virtual void draw() = 0;
         virtual void resize(const glm::u32vec2& size) { }
 
+        void setCamera(CameraComponent* camera) { mCamera = camera; }
+        [[nodiscard]] CameraComponent* getCamera() const { return mCamera; }
+
     protected:
         friend class LayerStack;
 
-        std::vector<Drawable*> mDrawables;
+        std::vector<DrawableComponent*> mDrawables;
         const std::string mName;
+        CameraComponent* mCamera;
     };
 
     class LayerStack {
@@ -43,7 +48,8 @@ namespace lake {
         void removeLayer(const std::string& name);
         void clearLayers();
 
-        [[nodiscard]] Layer* getLayer(const std::string& name);
+        [[nodiscard]] Layer* getLayer(const std::size_t hash);
+        [[nodiscard]] Layer* getLayer(const std::string& name) { return this->getLayer(std::hash<std::string>{}(name)); }
 
         template <typename T>
         T* getLayer(const std::string& name) {
@@ -54,7 +60,7 @@ namespace lake {
 
         void resizeLayers(const glm::u32vec2& size);
 
-        void pushDrawable(Drawable* drawable, const std::size_t layerHash);
+        void pushDrawable(DrawableComponent* drawable, const std::size_t layerHash);
 
         void drawLayers() const;
 

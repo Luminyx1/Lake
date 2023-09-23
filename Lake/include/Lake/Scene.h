@@ -15,6 +15,8 @@ namespace lake {
 
         void update(const f32 timeStep);
 
+        const std::vector<Entity*>& getEntities() const { return mEntities; }
+
     private:
         std::vector<Entity*> mEntities;
     };

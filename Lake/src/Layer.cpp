@@ -43,10 +43,8 @@ void lake::LayerStack::clearLayers() {
     mLayers.clear();
 }
 
-lake::Layer* lake::LayerStack::getLayer(const std::string& name) {
-    const std::size_t targetHash = std::hash<std::string>{}(name);
-
-    auto it = this->getLayerIterator(targetHash);
+lake::Layer* lake::LayerStack::getLayer(const std::size_t hash) {
+    auto it = this->getLayerIterator(hash);
 
     if (it != mLayers.end()) {
         return it->second;
@@ -61,7 +59,7 @@ void lake::LayerStack::resizeLayers(const glm::u32vec2& size) {
     }
 }
 
-void lake::LayerStack::pushDrawable(Drawable* drawable, const std::size_t layerHash) {
+void lake::LayerStack::pushDrawable(DrawableComponent* drawable, const std::size_t layerHash) {
     auto it = this->getLayerIterator(layerHash);
 
     if (it != mLayers.end()) {
@@ -74,6 +72,7 @@ void lake::LayerStack::pushDrawable(Drawable* drawable, const std::size_t layerH
 void lake::LayerStack::drawLayers() const {
     for (const auto& [hash, layer] : mLayers) {
         layer->draw();
+        layer->mDrawables.clear();
     }
 }
 

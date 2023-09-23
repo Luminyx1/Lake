@@ -1,6 +1,8 @@
 #include "Lake/Graphics.h"
 
 #include "Lake/Log.h"
+#include "Lake/Texture.h"
+#include "Lake/ShaderProgram.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -28,16 +30,36 @@ lake::Graphics::Graphics(const lake::Graphics::Properties& properties)
     success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
     LK_ASSERT(success, "Failed to initialize GLAD");
+
+#ifndef LK_DIST
+    static const auto debugCallback = [](GLenum, GLenum, GLuint, GLenum severity, GLsizei, const GLchar* message, const void*) {
+        switch (severity) {
+            case GL_DEBUG_SEVERITY_HIGH:            return lake::error(message);
+            case GL_DEBUG_SEVERITY_MEDIUM:          return lake::warn(message);
+            case GL_DEBUG_SEVERITY_LOW:             return lake::info(message);
+            case GL_DEBUG_SEVERITY_NOTIFICATION:    return lake::trace(message);
+        }
+    };
+
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(debugCallback, nullptr);
+#endif
 }
 
 lake::Graphics::~Graphics() {
+    Texture::clearCache();
+    ShaderProgram::clearCache();
+
     glfwDestroyWindow(glfwGetCurrentContext());
     glfwTerminate();
 }
 
 bool lake::Graphics::update() {
+    GLFWwindow* const window = glfwGetCurrentContext();
+
     glfwPollEvents();
-    glfwSwapBuffers(glfwGetCurrentContext());
+    glfwSwapBuffers(window);
 
     const f32 time = static_cast<f32>(glfwGetTime());
 	mFrameTime = time - mLastFrameTime;
@@ -50,9 +72,15 @@ bool lake::Graphics::update() {
 
     mLayerStack.drawLayers();
 
-    return !glfwWindowShouldClose(glfwGetCurrentContext());
+    return !glfwWindowShouldClose(window);
 }
 
-void lake::Graphics::pushDrawable(Drawable* drawable, const std::size_t layerHash) {
+void lake::Graphics::pushDrawable(DrawableComponent* drawable, const std::size_t layerHash) {
     mLayerStack.pushDrawable(drawable, layerHash);
+}
+
+glm::u32vec2 lake::Graphics::getFramebufferSize() {
+    glm::ivec2 size;
+    glfwGetFramebufferSize(glfwGetCurrentContext(), &size.x, &size.y);
+    return size;
 }

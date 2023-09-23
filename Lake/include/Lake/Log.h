@@ -101,7 +101,7 @@ namespace lake {
 } // namespace lake
 
 #ifndef LK_DIST
-    #define LK_ASSERT(x, ...) do { if (!(x)) { lake::error(LK_FILENAME, "(", __LINE__, "): Assert failed! ", __VA_ARGS__ ); LK_BREAKPOINT(); } } while (false)
+    #define LK_ASSERT(x, ...) do { if (!(x)) [[unlikely]] { lake::error(LK_FILENAME, "(", __LINE__, "): Assert failed! ", __VA_ARGS__ ); LK_BREAKPOINT(); } } while (false)
 #else
     #define LK_ASSERT(x, ...) do { (void)(x); } while (false)
 #endif

@@ -1,6 +1,7 @@
 #include "Lake/Application.h"
 
 #include "Lake/Log.h"
+#include "Lake/SpriteComponent.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -26,5 +27,17 @@ void lake::Application::run() {
         this->onUpdate(ts);
 
         mScene.update(ts);
+
+        const std::vector<Entity*>& entities = mScene.getEntities();
+
+        for (auto& entity : entities) {        
+            for (auto& spriteComponent : entity->getComponents<lake::SpriteComponent>()) { //? Can we make this take all drawable components?
+                mGraphics.pushDrawable(spriteComponent, spriteComponent->getTargetLayerHash());
+            }
+
+            for (auto& cameraComponent : entity->getComponents<lake::CameraComponent>()) {
+                mGraphics.getLayerStack().getLayer(cameraComponent->getTargetLayerHash())->setCamera(cameraComponent);
+            }
+        }
     }
 }

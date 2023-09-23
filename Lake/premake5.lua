@@ -21,7 +21,8 @@ project "Lake"
         "vendor/glfw/include",
         "vendor/glm/",
         "vendor/imgui",
-        "vendor/simdjson/include"
+        "vendor/simdjson/include",
+        "vendor/stb"
     }
 
     files {

@@ -1,42 +1,39 @@
 #include "Lake/Entity.h"
 #include "Lake/Log.h"
+#include "Lake/SpriteComponent.h"
+#include "Lake/CameraComponent.h"
+#include "Lake/Graphics.h"
 
-class ExampleComponent final : public lake::EntityComponent {
-public:
-    ExampleComponent()
-        : EntityComponent()
-    {
-        lake::info("ExampleComponent::ExampleComponent");
-    }
-
-    ~ExampleComponent() override {
-        lake::info("ExampleComponent::~ExampleComponent");
-    }
-
-    void method() {
-        lake::info("ExampleComponent::method");
-    }
-};
+#include <glm/gtc/matrix_transform.hpp>
 
 class TestEntity final : public lake::Entity {
 public:
     TestEntity(const lake::Entity::Properties& properties)
         : Entity(properties)
     {
-        this->addComponent<ExampleComponent>();
+        lake::SpriteComponent* sprite = new lake::SpriteComponent("sprite.png");
+        sprite->setTargetLayer("main");
+        this->addComponent<lake::SpriteComponent>(sprite);
+
+        const f32 aspectRatio = static_cast<f32>(lake::Graphics::getFramebufferSize().x) / static_cast<f32>(lake::Graphics::getFramebufferSize().y);
+        lake::OrthographicCameraComponent* camera = new lake::OrthographicCameraComponent(
+            glm::vec3(0.0f, 0.0f, 0.0f),
+            glm::vec3(0.0f, 0.0f, 1.0f),
+            glm::vec3(0.0f, 1.0f, 0.0f),
+            1.0f, -1.0f, aspectRatio, -aspectRatio, -1.0f, 1.0f
+        );
+        camera->setTargetLayer("main");
+        this->addComponent<lake::CameraComponent>(camera);
     }
 
-    ~TestEntity() override {
-        lake::info("TestEntity::~TestEntity");
-    }
+    ~TestEntity() override = default;
 
     void onUpdate(const f32 timeStep) override {
-        lake::info("TestEntity::onUpdate ts: ", timeStep, ", position: x.", mPosition.x, " y.", mPosition.y, " z.", mPosition.z);
-
-        std::span<ExampleComponent*> exampleComponents = this->getComponents<ExampleComponent>();
-
-        for (auto& component : exampleComponents) {
-            component->method();
+        std::span<lake::SpriteComponent*> spriteComponents = this->getComponents<lake::SpriteComponent>();
+        for (auto& component : spriteComponents) {
+            component->setMatrix(
+                glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f))
+            );
         }
     }
 };
