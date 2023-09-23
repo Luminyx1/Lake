@@ -13,17 +13,19 @@ public:
     {
         lake::SpriteComponent* sprite = new lake::SpriteComponent("sprite.png");
         sprite->setTargetLayer("main");
-        this->addComponent<lake::SpriteComponent>(sprite);
+        this->addComponent<lake::DrawableComponent>(sprite);
     }
 
     ~TestEntity() override = default;
 
     void onUpdate(const f32 timeStep) override {
-        std::span<lake::SpriteComponent*> spriteComponents = this->getComponents<lake::SpriteComponent>();
-        for (auto& component : spriteComponents) {
-            component->setMatrix(
-                glm::translate(glm::mat4(1.0f), mPosition)
-            );
+        std::span<lake::DrawableComponent*> drawableComponents = this->getComponents<lake::DrawableComponent>();
+        for (auto& component : drawableComponents) {
+            if (dynamic_cast<lake::SpriteComponent*>(component)) {
+                dynamic_cast<lake::SpriteComponent*>(component)->setMatrix(
+                    glm::translate(glm::mat4(1.0f), mPosition)
+                );
+            }
         }
     }
 };

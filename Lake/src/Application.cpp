@@ -39,8 +39,8 @@ void lake::Application::intermoduleDataTransfer() {
         const std::vector<Entity*>& entities = mScene.getEntities();
 
         for (auto& entity : entities) {        
-            for (auto& spriteComponent : entity->getComponents<lake::SpriteComponent>()) { //? Can we make this take all drawable components?
-                mGraphics.pushDrawable(spriteComponent, spriteComponent->getTargetLayerHash());
+            for (auto& drawableComponent : entity->getComponents<lake::DrawableComponent>()) {
+                mGraphics.pushDrawable(drawableComponent, drawableComponent->getTargetLayerHash());
             }
 
             for (auto& cameraComponent : entity->getComponents<lake::CameraComponent>()) {

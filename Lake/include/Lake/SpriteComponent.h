@@ -17,9 +17,6 @@ namespace lake {
 
         void setMatrix(const glm::mat4& matrix) { mMatrix = matrix; }
         [[nodiscard]] const glm::mat4& getMatrix() const { return mMatrix; }
-        
-        void setTargetLayer(const std::string& layerName) { mTargetLayerHash = std::hash<std::string>{}(layerName); }
-        std::size_t getTargetLayerHash() const { return mTargetLayerHash; }
 
         void setTexture(const std::string& texturePath) { mTexture = Texture(texturePath); }
         void setShaderProgram(ShaderProgram&& shaderProgram) { mShaderProgram = std::move(shaderProgram); }
@@ -28,7 +25,7 @@ namespace lake {
         glm::mat4 mMatrix;
         Texture mTexture;
         ShaderProgram mShaderProgram;
-        std::size_t mTargetLayerHash;
+        
     };
 
 } // namespace lake

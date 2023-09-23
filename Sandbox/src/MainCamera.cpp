@@ -19,6 +19,8 @@ public:
         this->addComponent<lake::CameraComponent>(camera);
     }
 
+    ~MainCamera() override = default;
+
     void onUpdate(const f32 timeStep) override {
         std::span<lake::CameraComponent*> cameraComponents = this->getComponents<lake::CameraComponent>();
         for (auto& component : cameraComponents) {
