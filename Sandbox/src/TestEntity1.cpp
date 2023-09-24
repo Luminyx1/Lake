@@ -34,7 +34,7 @@ public:
 
     void onUpdate(const f32 timeStep) override {
         if (mRotateNextFrame) {
-            mRotation += timeStep * 180.0f;
+            mRotation += timeStep * -180.0f;
             mRotateNextFrame = false;
         }
 

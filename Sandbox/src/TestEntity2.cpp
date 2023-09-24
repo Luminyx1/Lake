@@ -17,6 +17,8 @@ public:
         , mScale(lake::json::getVec2(properties, "scale"))
         , mRotation(0.0f)
         , mMousePos(0.0f, 0.0f)
+        , mRotateNextFrame(false)
+        , mMousedown(false)
     {
         lake::SpriteComponent* sprite = new lake::SpriteComponent("sprite.png");
         sprite->setTargetLayer("main");
@@ -35,6 +37,8 @@ public:
         if (mRotateNextFrame) {
             mRotation += timeStep * 180.0f;
             mRotateNextFrame = false;
+        } else {
+            mRotation += timeStep * 180.0f * mMousedown;
         }
 
         const glm::vec2 screenSize = lake::Graphics::getFramebufferSize();
@@ -67,6 +71,20 @@ public:
             const auto mouseMoveEvent = static_cast<lake::MouseMoveEvent*>(event);
 
             mMousePos = mouseMoveEvent->getPosition();
+        } else if (event->getType() == lake::EventType::MousePress) {
+            const auto mousePressEvent = static_cast<lake::MousePressEvent*>(event);
+
+            if (mousePressEvent->getButton() == GLFW_MOUSE_BUTTON_LEFT) {
+                mMousedown = 1;
+            } else if (mousePressEvent->getButton() == GLFW_MOUSE_BUTTON_RIGHT) {
+                mMousedown = -1;
+            }
+        } else if (event->getType() == lake::EventType::MouseRelease) {
+            const auto mouseReleaseEvent = static_cast<lake::MouseReleaseEvent*>(event);
+
+            if (mouseReleaseEvent->getButton() == GLFW_MOUSE_BUTTON_LEFT || mouseReleaseEvent->getButton() == GLFW_MOUSE_BUTTON_RIGHT) {
+                mMousedown = 0;
+            }
         }
     }
 
@@ -76,6 +94,7 @@ private:
     f32 mRotation;
     glm::vec2 mMousePos;
     bool mRotateNextFrame;
+    i32 mMousedown;
 };
 
 lake::Entity::RegisterEntity<TestEntity2> testEntity2("TestEntity2");
