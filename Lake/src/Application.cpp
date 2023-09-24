@@ -69,14 +69,19 @@ void lake::Application::intermoduleDataTransfer() {
         const std::vector<Entity*>& entities = mScene.getEntities();
 
         std::vector<lake::CircleColliderComponent*> circleColliders; circleColliders.reserve(entities.size());
+        std::vector<lake::BoxColliderComponent*> boxColliders; boxColliders.reserve(entities.size());
 
         for (auto entity : entities) {
             for (auto circleCollider : entity->getComponents<lake::CircleColliderComponent>()) {
                 circleColliders.push_back(circleCollider);
             }
+
+            for (auto boxCollider : entity->getComponents<lake::BoxColliderComponent>()) {
+                boxColliders.push_back(boxCollider);
+            }
         }
 
-        mPhysics.update(mGraphics.getTimeStep(), circleColliders);
+        mPhysics.update(mGraphics.getTimeStep(), circleColliders, boxColliders);
     }
 }
 
