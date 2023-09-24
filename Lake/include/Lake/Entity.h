@@ -36,6 +36,7 @@ namespace lake {
 
             entityFactory factory;
             std::string identifier;
+            std::size_t identifierHash;
         };
 
         template <typename T>
@@ -71,8 +72,14 @@ namespace lake {
             return mComponents.find(std::type_index(typeid(T))) != mComponents.end();
         }
 
+        [[nodiscard]] const std::string& getIdentifier() const { return mRegistry->identifier; }
+        [[nodiscard]] std::size_t getIdentifierHash() const { return mRegistry->identifierHash; }
+
     private:
+        friend class Scene;
+
         std::map<std::type_index, std::vector<EntityComponent*>> mComponents;
+        const Registry* mRegistry = nullptr;
     };
 
 } // namespace lake

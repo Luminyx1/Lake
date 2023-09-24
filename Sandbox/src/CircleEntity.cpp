@@ -9,9 +9,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
 
-class TestEntity2 final : public lake::Entity {
+class CircleEntity final : public lake::Entity {
 public:
-    TestEntity2(lake::Entity::Properties properties)
+    CircleEntity(lake::Entity::Properties properties)
         : Entity()
         , mPosition(lake::json::getVec3(properties, "position"))
         , mScale(lake::json::getVec2(properties, "scale"))
@@ -24,14 +24,20 @@ public:
         sprite->setTargetLayer("main");
         this->addComponent<lake::DrawableComponent>(sprite);
 
-        lake::CircleColliderComponent* collider = new lake::CircleColliderComponent((mScale.x + mScale.y) / 2.0f, glm::vec2(mPosition.x, mPosition.y));
+        lake::CircleColliderComponent* collider = new lake::CircleColliderComponent(this, (mScale.x + mScale.y) / 2.0f, glm::vec2(mPosition.x, mPosition.y));
         collider->setCollisionCallback([this](lake::ColliderComponent* self, lake::ColliderComponent* other) {
             mRotateNextFrame = true;
+
+            static const std::size_t targetHash = std::hash<std::string>{}("BoxEntity");
+
+            if (other->getParent()->getIdentifierHash() == targetHash) {
+                lake::info("I (", self->getParent()->getIdentifier(), ") collided with a BoxEntity!");
+            }
         });
         this->addComponent<lake::CircleColliderComponent>(collider);
     }
 
-    ~TestEntity2() override = default;
+    ~CircleEntity() override = default;
 
     void onUpdate(const f32 timeStep) override {
         if (mRotateNextFrame) {
@@ -47,7 +53,7 @@ public:
         mPosition.y = -((mMousePos.y / screenSize.y) * 2.0f - 1.0f);
 
         // increase sensitivity
-        mPosition.x *= 2.0f;
+        mPosition.x *= 1.85f;
 
         std::span<lake::DrawableComponent*> drawableComponents = this->getComponents<lake::DrawableComponent>();
         for (auto component : drawableComponents) {
@@ -97,4 +103,4 @@ private:
     i32 mMousedown;
 };
 
-lake::Entity::RegisterEntity<TestEntity2> testEntity2("TestEntity2");
+lake::Entity::RegisterEntity<CircleEntity> circleEntity("CircleEntity");

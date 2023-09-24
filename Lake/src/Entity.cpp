@@ -3,6 +3,7 @@
 lake::Entity::Registry::Registry(const lake::Entity::Registry::entityFactory factory, const std::string& identifier) 
     : factory(factory)
     , identifier(identifier)
+    , identifierHash(std::hash<std::string>{}(identifier))
 {
     Registry::getRegistry()[identifier] = *this;
 }

@@ -8,9 +8,10 @@ namespace lake {
 
     class ColliderComponent : public EntityComponent {
     public:
-        ColliderComponent(const glm::vec2& position)
+        ColliderComponent(Entity* parent, const glm::vec2& position)
             : mPosition(position)
             , mCollisionCallback(nullptr)
+            , mParent(parent)
         { }
 
         ~ColliderComponent() override = default;
@@ -26,9 +27,12 @@ namespace lake {
             }
         }
 
+        [[nodiscard]] Entity* getParent() const { return mParent; }
+
     private:
         glm::vec2 mPosition;
         std::function<void(ColliderComponent*, ColliderComponent*)> mCollisionCallback;
+        Entity* mParent;
     };
 
 } // namespace lake

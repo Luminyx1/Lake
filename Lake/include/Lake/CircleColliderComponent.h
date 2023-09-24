@@ -6,8 +6,8 @@ namespace lake {
 
     class CircleColliderComponent final : public ColliderComponent {
     public:
-        CircleColliderComponent(const f32 radius, const glm::vec2& position)
-            : ColliderComponent(position)
+        CircleColliderComponent(Entity* parent, const f32 radius, const glm::vec2& position)
+            : ColliderComponent(parent, position)
             , mRadius(radius)
         { }
 

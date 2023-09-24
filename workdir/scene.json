@@ -1,17 +1,17 @@
 {
     "entities": [
         {
-            "type": "TestEntity1",
+            "type": "BoxEntity",
             "properties": {
                 "position": [0.0, 0.0, 1.0],
-                "scale": [0.5, 0.5]
+                "scale": [0.25, 0.5]
             }
         },
         {
-            "type": "TestEntity2",
+            "type": "CircleEntity",
             "properties": {
                 "position": [-2.0, 0.0, 1.0],
-                "scale": [1.0, 1.0]
+                "scale": [0.25, 0.25]
             }
         },
         {

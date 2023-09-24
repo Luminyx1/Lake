@@ -9,9 +9,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
 
-class TestEntity1 final : public lake::Entity {
+class BoxEntity final : public lake::Entity {
 public:
-    TestEntity1(lake::Entity::Properties properties)
+    BoxEntity(lake::Entity::Properties properties)
         : Entity()
         , mPosition(lake::json::getVec3(properties, "position"))
         , mScale(lake::json::getVec2(properties, "scale"))
@@ -24,14 +24,14 @@ public:
         sprite->setTargetLayer("main");
         this->addComponent<lake::DrawableComponent>(sprite);
 
-        lake::BoxColliderComponent* collider = new lake::BoxColliderComponent(mScale, glm::vec2(mPosition.x, mPosition.y));
+        lake::BoxColliderComponent* collider = new lake::BoxColliderComponent(this, mScale, glm::vec2(mPosition.x, mPosition.y));
         collider->setCollisionCallback([this](lake::ColliderComponent* self, lake::ColliderComponent* other) {
             //mRotateNextFrame = true;
         });
         this->addComponent<lake::BoxColliderComponent>(collider);
     }
 
-    ~TestEntity1() override = default;
+    ~BoxEntity() override = default;
 
     void onUpdate(const f32 timeStep) override {
         if (mRotateNextFrame) {
@@ -95,4 +95,4 @@ private:
     bool mRotateNextFrame;
 };
 
-lake::Entity::RegisterEntity<TestEntity1> testEntity1("TestEntity1");
+lake::Entity::RegisterEntity<BoxEntity> boxEntity("BoxEntity");

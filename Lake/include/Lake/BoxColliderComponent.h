@@ -6,8 +6,8 @@ namespace lake {
 
     class BoxColliderComponent final : public ColliderComponent {
     public:
-        BoxColliderComponent(const glm::vec2& size, const glm::vec2& position)
-            : ColliderComponent(position)
+        BoxColliderComponent(Entity* parent, const glm::vec2& size, const glm::vec2& position)
+            : ColliderComponent(parent, position)
             , mSize(size)
         { }
 
