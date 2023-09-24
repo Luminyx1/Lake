@@ -2,7 +2,7 @@
 #include "Lake/Log.h"
 #include "Lake/SpriteComponent.h"
 #include "Lake/CameraComponent.h"
-#include "Lake/BoxColliderComponent.h"
+#include "Lake/CircleColliderComponent.h"
 #include "Lake/Graphics.h"
 #include "Lake/JsonHelpers.h"
 
@@ -20,16 +20,15 @@ public:
         , mRotateNextFrame(false)
         , mMousedown(false)
     {
-        lake::SpriteComponent* sprite = new lake::SpriteComponent("box.png");
+        lake::SpriteComponent* sprite = new lake::SpriteComponent("circle.png");
         sprite->setTargetLayer("main");
         this->addComponent<lake::DrawableComponent>(sprite);
 
-        lake::BoxColliderComponent* collider = new lake::BoxColliderComponent(mScale, glm::vec2(mPosition.x, mPosition.y));
+        lake::CircleColliderComponent* collider = new lake::CircleColliderComponent((mScale.x + mScale.y) / 2.0f, glm::vec2(mPosition.x, mPosition.y));
         collider->setCollisionCallback([this](lake::ColliderComponent* self, lake::ColliderComponent* other) {
-            //mRotateNextFrame = true;
-            lake::info("Collision! 2");
+            mRotateNextFrame = true;
         });
-        this->addComponent<lake::BoxColliderComponent>(collider);
+        this->addComponent<lake::CircleColliderComponent>(collider);
     }
 
     ~TestEntity2() override = default;
@@ -61,8 +60,8 @@ public:
             }
         }
 
-        std::span<lake::BoxColliderComponent*> boxColliders = this->getComponents<lake::BoxColliderComponent>();
-        for (auto component : boxColliders) {
+        std::span<lake::CircleColliderComponent*> colliders = this->getComponents<lake::CircleColliderComponent>();
+        for (auto component : colliders) {
             component->setPosition(glm::vec2(mPosition.x, mPosition.y));
         }
     }

@@ -27,7 +27,6 @@ public:
         lake::BoxColliderComponent* collider = new lake::BoxColliderComponent(mScale, glm::vec2(mPosition.x, mPosition.y));
         collider->setCollisionCallback([this](lake::ColliderComponent* self, lake::ColliderComponent* other) {
             //mRotateNextFrame = true;
-            lake::warn("Collision! 1");
         });
         this->addComponent<lake::BoxColliderComponent>(collider);
     }

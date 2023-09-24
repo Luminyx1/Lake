@@ -18,7 +18,9 @@ public:
     }
 
     void onUpdate(const f32 timeStep) override {
-        ImGui::ShowDemoWindow();
+        if (ImGui::Begin("Panel")) {
+            ImGui::Text("FPS: %f", 1.0f / timeStep);
+        } ImGui::End();
     }
 };
 
