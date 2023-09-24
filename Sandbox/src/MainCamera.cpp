@@ -30,6 +30,14 @@ public:
         }
     }
 
+    void onEvent(lake::Event* event) override {
+        if (event->getType() == lake::EventType::WindowResize) {
+            const auto resizeEvent = static_cast<lake::WindowResizeEvent*>(event);
+            const f32 aspectRatio = static_cast<f32>(resizeEvent->getSize().x) / static_cast<f32>(resizeEvent->getSize().y);
+            static_cast<lake::OrthographicCameraComponent*>(this->getComponents<lake::CameraComponent>()[0])->setProjection(1.0f, -1.0f, aspectRatio, -aspectRatio, -1.0f, 1.0f);
+        }
+    }
+
 private:
     glm::vec3 mPosition, mLookTarget;
 };

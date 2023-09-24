@@ -6,6 +6,8 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+std::deque<lake::Event*> lake::Application::sEventQueue;
+
 lake::Application::Application(const lake::Application::Properties& properties)
     : mGraphics({
         .window = {
@@ -24,15 +26,29 @@ lake::Application::~Application() {
 void lake::Application::run() {
     this->intermoduleDataTransfer();
 
-    while (mGraphics.update()) {
+    while (mGraphics.update()) { // Main loop
         const f32 ts = mGraphics.getTimeStep();
 
         this->onUpdate(ts);
+        this->handleEvents();
 
         mScene.update(ts);
 
         this->intermoduleDataTransfer();
     }
+}
+
+void lake::Application::handleEvents() {
+    for (auto& event : sEventQueue) {
+        this->onEvent(event);
+
+        mScene.onEvent(event);
+        mGraphics.onEvent(event);
+
+        delete event;
+    }
+
+    sEventQueue.clear();
 }
 
 void lake::Application::intermoduleDataTransfer() {
@@ -62,4 +78,8 @@ void lake::Application::intermoduleDataTransfer() {
 
         mPhysics.update(mGraphics.getTimeStep(), circleColliders);
     }
+}
+
+void lake::Application::raiseEvent(lake::Event* event) {
+    sEventQueue.push_back(event);
 }

@@ -3,6 +3,7 @@
 #include "Lake/Common.h"
 
 #include "Lake/Entity.h"
+#include "Lake/Event.h"
 
 #include <string>
 
@@ -14,6 +15,7 @@ namespace lake {
         ~Scene();
 
         void update(const f32 timeStep);
+        void onEvent(Event* event);
 
         const std::vector<Entity*>& getEntities() const { return mEntities; }
 

@@ -1,9 +1,12 @@
 #pragma once
 
 #include "Lake/Common.h"
+#include "Lake/Event.h"
 #include "Lake/Graphics.h"
-#include "Lake/Scene.h"
 #include "Lake/Physics.h"
+#include "Lake/Scene.h"
+
+#include <queue>
 
 namespace lake {
     
@@ -26,10 +29,16 @@ namespace lake {
         virtual ~Application();
         
         virtual void onUpdate(const f32 timeStep) = 0;
+        virtual void onEvent(Event* event) { }
+
+        static void raiseEvent(Event* event);
 
     private:
         void run();
+        void handleEvents();
         void intermoduleDataTransfer();
+
+        static std::deque<Event*> sEventQueue;
 
     protected:
         Graphics mGraphics;

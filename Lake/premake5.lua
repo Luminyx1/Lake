@@ -8,6 +8,8 @@ project "Lake"
     targetdir ("bin/%{prj.name}-%{cfg.buildcfg}/out")
     objdir ("bin/%{prj.name}-%{cfg.buildcfg}/int")
 
+    defines "LK_INTERNAL"
+
     links {
         "GLFW",
         "glad",

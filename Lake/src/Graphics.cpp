@@ -3,6 +3,8 @@
 #include "Lake/Log.h"
 #include "Lake/Texture.h"
 #include "Lake/ShaderProgram.h"
+#include "Lake/Event.h"
+#include "Lake/Application.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -25,6 +27,20 @@ lake::Graphics::Graphics(const lake::Graphics::Properties& properties)
 
     LK_ASSERT(window != nullptr, "Failed to create GLFW window");
 
+    glfwSetWindowIconifyCallback(window, [](GLFWwindow*, i32 iconified) {
+        if (!iconified) {
+            Application::raiseEvent(new lake::WindowMaximizeEvent());
+        }
+    });
+
+    glfwSetWindowSizeCallback(window, [](GLFWwindow* window, i32 width, i32 height) {
+        if (width == 0 || height == 0) {
+            Application::raiseEvent(new lake::WindowMinimizeEvent());
+        } else {
+            Application::raiseEvent(new lake::WindowResizeEvent(width, height));
+        }
+    });
+
     glfwMakeContextCurrent(window);
 
     success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
@@ -37,7 +53,7 @@ lake::Graphics::Graphics(const lake::Graphics::Properties& properties)
             case GL_DEBUG_SEVERITY_HIGH:            return lake::error(message);
             case GL_DEBUG_SEVERITY_MEDIUM:          return lake::warn(message);
             case GL_DEBUG_SEVERITY_LOW:             return lake::info(message);
-            case GL_DEBUG_SEVERITY_NOTIFICATION:    return lake::trace(message);
+            //case GL_DEBUG_SEVERITY_NOTIFICATION:    return lake::trace(message);
         }
     };
 
@@ -45,6 +61,9 @@ lake::Graphics::Graphics(const lake::Graphics::Properties& properties)
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     glDebugMessageCallback(debugCallback, nullptr);
 #endif
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
 }
 
 lake::Graphics::~Graphics() {
@@ -73,6 +92,15 @@ bool lake::Graphics::update() {
     mLayerStack.drawLayers();
 
     return !glfwWindowShouldClose(window);
+}
+
+void lake::Graphics::onEvent(Event* event) {
+    if (event->getType() == lake::EventType::WindowResize) {
+        const auto resizeEvent = static_cast<lake::WindowResizeEvent*>(event);
+
+        glViewport(0, 0, resizeEvent->getSize().x, resizeEvent->getSize().y);
+        mLayerStack.resizeLayers(resizeEvent->getSize());
+    }
 }
 
 void lake::Graphics::pushDrawable(DrawableComponent* drawable, const std::size_t layerHash) {

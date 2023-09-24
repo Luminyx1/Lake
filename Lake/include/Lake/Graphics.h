@@ -3,6 +3,7 @@
 #include "Lake/Common.h"
 
 #include "Lake/Layer.h"
+#include "Lake/Event.h"
 
 #include <glm/glm.hpp>
 
@@ -21,6 +22,7 @@ namespace lake {
         ~Graphics();
 
         [[nodiscard]] bool update();
+        void onEvent(Event* event);
 
         void pushDrawable(DrawableComponent* drawable, const std::size_t layerHash);
 

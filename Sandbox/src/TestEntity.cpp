@@ -31,10 +31,6 @@ public:
     ~TestEntity() override = default;
 
     void onUpdate(const f32 timeStep) override {
-        if (ImGui::Begin(("TestEntity" + std::to_string((int)(uintptr_t)this)).c_str())) {
-            ImGui::SliderFloat3("Position", &mPosition.x, -10.0f, 10.0f);
-        } ImGui::End();
-
         if (mRotateNextFrame) {
             mRotation += timeStep * 90.0f;
             mRotateNextFrame = false;

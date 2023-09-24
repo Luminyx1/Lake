@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Lake/Common.h"
+#include "Lake/Event.h"
 
 #include <map>
 #include <span>
@@ -51,6 +52,7 @@ namespace lake {
         virtual ~Entity();
 
         virtual void onUpdate(const f32 timeStep) { }
+        virtual void onEvent(Event* event) { }
 
         template <typename T>
         void addComponent(T* component) requires std::is_base_of_v<EntityComponent, T> {

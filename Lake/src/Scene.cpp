@@ -41,7 +41,13 @@ lake::Scene::~Scene() {
 }
 
 void lake::Scene::update(const f32 timeStep) {
-    for (auto& entity : mEntities) {
+    for (auto entity : mEntities) {
         entity->onUpdate(timeStep);
+    }
+}
+
+void lake::Scene::onEvent(lake::Event* event) {
+    for (auto entity : mEntities) {
+        entity->onEvent(event);
     }
 }
