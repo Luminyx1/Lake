@@ -1,14 +1,14 @@
 {
     "entities": [
         {
-            "type": "TestEntity",
+            "type": "TestEntity1",
             "properties": {
                 "position": [0.0, 0.0, 1.0],
                 "scale": [0.5, 0.5]
             }
         },
         {
-            "type": "TestEntity",
+            "type": "TestEntity2",
             "properties": {
                 "position": [-2.0, 0.0, 1.0],
                 "scale": [1.0, 1.0]

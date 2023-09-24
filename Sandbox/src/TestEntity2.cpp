@@ -1,0 +1,81 @@
+#include "Lake/Entity.h"
+#include "Lake/Log.h"
+#include "Lake/SpriteComponent.h"
+#include "Lake/CameraComponent.h"
+#include "Lake/CircleColliderComponent.h"
+#include "Lake/Graphics.h"
+#include "Lake/JsonHelpers.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <imgui.h>
+
+class TestEntity2 final : public lake::Entity {
+public:
+    TestEntity2(lake::Entity::Properties properties)
+        : Entity()
+        , mPosition(lake::json::getVec3(properties, "position"))
+        , mScale(lake::json::getVec2(properties, "scale"))
+        , mRotation(0.0f)
+        , mMousePos(0.0f, 0.0f)
+    {
+        lake::SpriteComponent* sprite = new lake::SpriteComponent("sprite.png");
+        sprite->setTargetLayer("main");
+        this->addComponent<lake::DrawableComponent>(sprite);
+
+        lake::CircleColliderComponent* collider = new lake::CircleColliderComponent((mScale.x + mScale.y) / 2.0f, glm::vec2(mPosition.x, mPosition.y));
+        collider->setCollisionCallback([this](lake::ColliderComponent* self, lake::ColliderComponent* other) {
+            mRotateNextFrame = true;
+        });
+        this->addComponent<lake::CircleColliderComponent>(collider);
+    }
+
+    ~TestEntity2() override = default;
+
+    void onUpdate(const f32 timeStep) override {
+        if (mRotateNextFrame) {
+            mRotation += timeStep * 180.0f;
+            mRotateNextFrame = false;
+        }
+
+        const glm::vec2 screenSize = lake::Graphics::getFramebufferSize();
+        
+        mPosition.x = (mMousePos.x / screenSize.x) * 2.0f - 1.0f;
+        mPosition.y = -((mMousePos.y / screenSize.y) * 2.0f - 1.0f);
+
+        // increase sensitivity
+        mPosition.x *= 2.0f;
+
+        std::span<lake::DrawableComponent*> drawableComponents = this->getComponents<lake::DrawableComponent>();
+        for (auto component : drawableComponents) {
+            if (dynamic_cast<lake::SpriteComponent*>(component)) {
+                dynamic_cast<lake::SpriteComponent*>(component)->setMatrix(
+                    glm::translate(glm::mat4(1.0f), mPosition) *
+                    glm::rotate(glm::mat4(1.0f), glm::radians(mRotation), glm::vec3(0.0f, 0.0f, 1.0f)) *
+                    glm::scale(glm::mat4(1.0f), glm::vec3(mScale, 0.0f))
+                );
+            }
+        }
+
+        std::span<lake::CircleColliderComponent*> circleColliders = this->getComponents<lake::CircleColliderComponent>();
+        for (auto component : circleColliders) {
+            component->setPosition(glm::vec2(mPosition.x, mPosition.y));
+        }
+    }
+
+    void onEvent(lake::Event* event) override {
+        if (event->getType() == lake::EventType::MouseMove) {
+            const auto mouseMoveEvent = static_cast<lake::MouseMoveEvent*>(event);
+
+            mMousePos = mouseMoveEvent->getPosition();
+        }
+    }
+
+private:
+    glm::vec3 mPosition;
+    glm::vec2 mScale;
+    f32 mRotation;
+    glm::vec2 mMousePos;
+    bool mRotateNextFrame;
+};
+
+lake::Entity::RegisterEntity<TestEntity2> testEntity2("TestEntity2");

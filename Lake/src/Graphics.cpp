@@ -41,6 +41,28 @@ lake::Graphics::Graphics(const lake::Graphics::Properties& properties)
         }
     });
 
+    glfwSetKeyCallback(window, [](GLFWwindow*, i32 key, i32 scancode, i32 action, i32 mods) {
+        if (action == GLFW_PRESS) {
+            Application::raiseEvent(new lake::KeyPressEvent(key, scancode, mods));
+        } else if (action == GLFW_RELEASE) {
+            Application::raiseEvent(new lake::KeyReleaseEvent(key, scancode, mods));
+        } else if (action == GLFW_REPEAT) {
+            Application::raiseEvent(new lake::KeyRepeatEvent(key, scancode, mods));
+        }
+    });
+
+    glfwSetMouseButtonCallback(window, [](GLFWwindow*, i32 button, i32 action, i32 mods) {
+        if (action == GLFW_PRESS) {
+            Application::raiseEvent(new lake::MousePressEvent(button, mods));
+        } else if (action == GLFW_RELEASE) {
+            Application::raiseEvent(new lake::MouseReleaseEvent(button, mods));
+        }
+    });
+
+    glfwSetCursorPosCallback(window, [](GLFWwindow*, f64 x, f64 y) {
+        Application::raiseEvent(new lake::MouseMoveEvent(x, y));
+    });
+
     glfwMakeContextCurrent(window);
 
     success = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
