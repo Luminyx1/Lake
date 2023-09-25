@@ -5,9 +5,12 @@
 #include "Lake/CircleColliderComponent.h"
 #include "Lake/Graphics.h"
 #include "Lake/JsonHelpers.h"
+#include "Lake/Scene.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
+
+#include <algorithm>
 
 class CircleEntity final : public lake::Entity {
 public:
@@ -47,13 +50,21 @@ public:
             mRotation += timeStep * 180.0f * mMousedown;
         }
 
-        const glm::vec2 screenSize = lake::Graphics::getFramebufferSize();
-        
-        mPosition.x = (mMousePos.x / screenSize.x) * 2.0f - 1.0f;
-        mPosition.y = -((mMousePos.y / screenSize.y) * 2.0f - 1.0f);
+        Entity* cameraEntity = *std::find_if(mScene->getEntities().begin(), mScene->getEntities().end(), [](Entity* entity) {
+            return entity->getIdentifierHash() == std::hash<std::string>{}("MainCamera");
+        });
 
-        // increase sensitivity
-        mPosition.x *= 1.85f;
+        // use camera to project mouse position
+        const auto camera = static_cast<lake::OrthographicCameraComponent*>(cameraEntity->getComponents<lake::CameraComponent>()[0]);
+        const glm::mat4 view = camera->getView();
+        const glm::mat4 projection = camera->getProjection();
+        const glm::vec4 viewport = glm::vec4(0.0f, 0.0f, lake::Graphics::getFramebufferSize().x, lake::Graphics::getFramebufferSize().y);
+        const glm::vec3 screenPos = glm::unProject(glm::vec3(mMousePos, 0.0f), view, projection, viewport);
+        mPosition.x = screenPos.x;
+
+        if (this->getComponents<lake::CircleColliderComponent>()[0]->intersects(screenPos)) {
+            lake::info("I (", this->getIdentifier(), ") am intersecting the mouse!");
+        }
 
         std::span<lake::DrawableComponent*> drawableComponents = this->getComponents<lake::DrawableComponent>();
         for (auto component : drawableComponents) {

@@ -29,6 +29,7 @@ lake::Scene::Scene(const std::string& path) {
 
             Entity* newEntity = data.factory(properties);
             newEntity->mRegistry = &data;
+            newEntity->mScene = this;
 
             mEntities.push_back(newEntity);
         }

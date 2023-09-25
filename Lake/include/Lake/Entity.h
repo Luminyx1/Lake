@@ -15,6 +15,7 @@
 namespace lake {
 
     class Entity;
+    class Scene;
 
     class EntityComponent {
     public:
@@ -74,6 +75,9 @@ namespace lake {
 
         [[nodiscard]] const std::string& getIdentifier() const { return mRegistry->identifier; }
         [[nodiscard]] std::size_t getIdentifierHash() const { return mRegistry->identifierHash; }
+
+    protected:
+        Scene* mScene = nullptr;
 
     private:
         friend class Scene;
