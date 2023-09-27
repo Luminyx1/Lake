@@ -54,22 +54,19 @@ public:
             return entity->getIdentifierHash() == std::hash<std::string>{}("MainCamera");
         });
 
-        // use camera to project mouse position
-        const auto camera = static_cast<lake::OrthographicCameraComponent*>(cameraEntity->getComponents<lake::CameraComponent>()[0]);
-        const glm::mat4 view = camera->getView();
-        const glm::mat4 projection = camera->getProjection();
-        const glm::vec4 viewport = glm::vec4(0.0f, 0.0f, lake::Graphics::getFramebufferSize().x, lake::Graphics::getFramebufferSize().y);
-        const glm::vec3 screenPos = glm::unProject(glm::vec3(mMousePos, 0.0f), view, projection, viewport);
-        mPosition.x = screenPos.x;
+        const lake::CameraComponent* camera = cameraEntity->getComponents<lake::CameraComponent>()[0];
+        const glm::vec3 worldPos = camera->unProject(mMousePos);
 
-        if (this->getComponents<lake::CircleColliderComponent>()[0]->intersects(screenPos)) {
+        if (this->getComponents<lake::CircleColliderComponent>()[0]->intersects(worldPos)) {
             lake::info("I (", this->getIdentifier(), ") am intersecting the mouse!");
         }
 
+        mPosition.x = worldPos.x;
+
         std::span<lake::DrawableComponent*> drawableComponents = this->getComponents<lake::DrawableComponent>();
         for (auto component : drawableComponents) {
-            if (dynamic_cast<lake::SpriteComponent*>(component)) {
-                dynamic_cast<lake::SpriteComponent*>(component)->setMatrix(
+            if (lake::SpriteComponent* sprite = dynamic_cast<lake::SpriteComponent*>(component)) {
+                sprite->setMatrix(
                     glm::translate(glm::mat4(1.0f), mPosition) *
                     glm::rotate(glm::mat4(1.0f), glm::radians(mRotation), glm::vec3(0.0f, 0.0f, 1.0f)) *
                     glm::scale(glm::mat4(1.0f), glm::vec3(mScale, 0.0f))

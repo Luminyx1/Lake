@@ -24,6 +24,8 @@ namespace lake {
         void setTargetLayer(const std::string& layerName) { mTargetLayerHash = std::hash<std::string>{}(layerName); }
         [[nodiscard]] std::size_t getTargetLayerHash() const { return mTargetLayerHash; }
 
+        [[nodiscard]] glm::vec3 unProject(const glm::vec2& screenPos) const;
+
     protected:
         glm::mat4 mProjection, mView, mViewProjection;
         glm::vec3 mPosition;
