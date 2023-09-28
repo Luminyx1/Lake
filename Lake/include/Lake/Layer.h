@@ -65,7 +65,7 @@ namespace lake {
         void drawLayers() const;
 
     private:
-        using LayerContainer = std::vector<std::pair<std::size_t, Layer*>>;
+        using LayerContainer = std::vector<std::pair<std::size_t, Layer*>>; // TODO: Use a map instead of a vector for faster lookup?
 
         LayerContainer::iterator getLayerIterator(const std::size_t hash);
 

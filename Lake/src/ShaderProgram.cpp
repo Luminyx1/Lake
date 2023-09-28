@@ -6,7 +6,8 @@
 
 #include <fstream>
 
-std::unordered_map<std::string, std::string> lake::ShaderProgram::Shader::sourceCache;
+std::unordered_map<std::string, std::string> lake::ShaderProgram::Shader::sSourceCache;
+std::unordered_map<std::string, std::pair<u32, u32>> lake::ShaderProgram::sProgramCache;
 
 lake::ShaderProgram::Shader::Shader(const std::string& path, const GLenum type)
     : mID(GL_NONE)
@@ -35,7 +36,7 @@ lake::ShaderProgram::Shader::Shader(const std::string& path, const GLenum type)
         return id;
     };
 
-    for (const auto& [cachedPath, cachedSource] : sourceCache) {
+    for (const auto& [cachedPath, cachedSource] : sSourceCache) {
         if (cachedPath == path) {
             mID = compile(cachedSource);
             return;
@@ -48,7 +49,7 @@ lake::ShaderProgram::Shader::Shader(const std::string& path, const GLenum type)
     const std::string shader(std::istreambuf_iterator<char>{file}, {});
     mID = compile(shader);
 
-    sourceCache[path] = shader;
+    sSourceCache[path] = shader;
 }
 
 lake::ShaderProgram::Shader::~Shader() {
@@ -57,7 +58,19 @@ lake::ShaderProgram::Shader::~Shader() {
 
 lake::ShaderProgram::ShaderProgram(const std::string& vshPath, const std::string& fshPath)
     : mID(glCreateProgram())
+    , mUniformLocations()
+    , mCombinedSourcePath(mCombinedSourcePath)
 {
+    for (auto& [cachedPath, cachedProgram] : sProgramCache) {
+        if (cachedPath == mCombinedSourcePath) {
+            mID = cachedProgram.second;
+            ++cachedProgram.first;
+            return;
+        }
+    }
+
+    sProgramCache[mCombinedSourcePath].first++;
+
     const Shader vsh(vshPath, GL_VERTEX_SHADER);
     const Shader fsh(fshPath, GL_FRAGMENT_SHADER);
 
@@ -105,10 +118,21 @@ lake::ShaderProgram::ShaderProgram(const std::string& vshPath, const std::string
             mUniformLocations.emplace(name.data(), glGetUniformLocation(mID, name.data()));
         }
     }
+
+    sProgramCache[mCombinedSourcePath].second = mID;
 }
 
 lake::ShaderProgram::~ShaderProgram() {
-    glDeleteProgram(mID);
+    if (mID == GL_NONE)
+        return;
+
+    const auto it = sProgramCache.find(mCombinedSourcePath);
+    if (it != sProgramCache.end()) {
+        if (--it->second.first == 0) {
+            glDeleteProgram(it->second.second);
+            sProgramCache.erase(it);
+        }
+    }
 }
 
 void lake::ShaderProgram::bind() const {
@@ -230,5 +254,6 @@ i32 lake::ShaderProgram::getLocation(const std::string& name) const {
 }
 
 void lake::ShaderProgram::clearCache() {
-    Shader::sourceCache.clear();
+    Shader::sSourceCache.clear();
+    sProgramCache.clear();
 }

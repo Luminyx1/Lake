@@ -15,7 +15,7 @@
     #define LK_BREAKPOINT() __debugbreak()
 #elif defined(LK_COMPILER_CLANG) || defined(LK_COMPILER_GCC)
     #define LK_BREAKPOINT() __builtin_trap()
-#endif
+#endif // LK_COMPILER_MSVC
 
 #include <cstdint>
 
