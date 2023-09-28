@@ -15,44 +15,41 @@ public:
         : Entity()
         , mPosition(lake::json::getVec3(properties, "position"))
         , mScale(lake::json::getVec2(properties, "scale"))
-        , mRotation(0.0f)
         , mDirectionX(0)
         , mDirectionY(0)
-        , mRotateNextFrame(false)
     {
+        //* Add components to build our entity. Then, control the entity in onUpdate.
+
+        // Add a sprite component to draw a sprite.
         lake::SpriteComponent* sprite = new lake::SpriteComponent("box.png");
-        sprite->setTargetLayer("main");
+        sprite->setTargetLayer("main"); // Assign the sprite to be drawn in the "main" layer.
         this->addComponent<lake::DrawableComponent>(sprite);
 
-        lake::BoxColliderComponent* collider = new lake::BoxColliderComponent(this, mScale, glm::vec2(mPosition.x, mPosition.y));
-        collider->setCollisionCallback([this](lake::ColliderComponent* self, lake::ColliderComponent* other) {
-            //mRotateNextFrame = true;
-        });
-        this->addComponent<lake::BoxColliderComponent>(collider);
+        // Add a collider component so other entities can collide with us. Shape is Box (rectangular), and don't register a callback since we don't need to act here.
+        this->addComponent<lake::BoxColliderComponent>(new lake::BoxColliderComponent(this, mScale, glm::vec2(mPosition.x, mPosition.y)));
     }
 
     ~BoxEntity() override = default;
 
     void onUpdate(const f32 timeStep) override {
-        if (mRotateNextFrame) {
-            mRotation += timeStep * -180.0f;
-            mRotateNextFrame = false;
-        }
+        //* Act behaviour for our entity. This is called every frame.
 
-        mPosition.x += timeStep * mDirectionX * 10.0f;
-        mPosition.y += timeStep * mDirectionY * 10.0f;
+        // Move the entity based on the direction we want to move in. Move values are determined by onEvent (keyboard input).
+        mPosition += glm::vec3(timeStep * mDirectionX * 3.0f, timeStep * mDirectionY * 3.0f, 0.0f);
 
+        // Update the sprite component's matrix to reflect the new position and scale. We use a for loop here because we can have multiple drawable components, however in this case we only have one.
         std::span<lake::DrawableComponent*> drawableComponents = this->getComponents<lake::DrawableComponent>();
         for (auto component : drawableComponents) {
             if (lake::SpriteComponent* sprite = dynamic_cast<lake::SpriteComponent*>(component)) {
                 sprite->setMatrix(
+                    // Transformation must be in this order: translate, rotate, scale. We don't rotate here, so skip that.
                     glm::translate(glm::mat4(1.0f), mPosition) *
-                    glm::rotate(glm::mat4(1.0f), glm::radians(mRotation), glm::vec3(0.0f, 0.0f, 1.0f)) *
                     glm::scale(glm::mat4(1.0f), glm::vec3(mScale, 0.0f))
                 );
             }
         }
 
+        // Update the collider component's position. We use a for loop here because we can have multiple collider components, however in this case we only have one.
         std::span<lake::BoxColliderComponent*> boxColliders = this->getComponents<lake::BoxColliderComponent>();
         for (auto component : boxColliders) {
             component->setPosition(glm::vec2(mPosition.x, mPosition.y));
@@ -60,6 +57,8 @@ public:
     }
 
     void onEvent(lake::Event* event) override {
+        //* Track events to get the state of keys we are interested in. We only act in onUpdate, so just store information here.
+
         if (event->getType() == lake::EventType::KeyPress) {
             const auto keyEvent = static_cast<lake::KeyPressEvent*>(event);
 
@@ -90,9 +89,8 @@ public:
 private:
     glm::vec3 mPosition;
     glm::vec2 mScale;
-    f32 mRotation;
     i32 mDirectionX, mDirectionY;
-    bool mRotateNextFrame;
 };
 
-lake::Entity::RegisterEntity<BoxEntity> boxEntity("BoxEntity");
+//* Register our entity so we can create it from a scene file.
+static const lake::Entity::RegisterEntity<BoxEntity> boxEntity("BoxEntity");
