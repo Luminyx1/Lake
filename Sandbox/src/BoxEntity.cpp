@@ -10,6 +10,9 @@
 #include <imgui.h>
 
 class BoxEntity final : public lake::Entity {
+    //* Register our entity class so we can create it from a scene file.
+    LK_REGISTER_ENTITY(BoxEntity);
+
 public:
     BoxEntity(lake::Entity::Properties properties)
         : Entity()
@@ -91,6 +94,3 @@ private:
     glm::vec2 mScale;
     i32 mDirectionX, mDirectionY;
 };
-
-//* Register our entity so we can create it from a scene file.
-static const lake::Entity::RegisterEntity<BoxEntity> boxEntity("BoxEntity");

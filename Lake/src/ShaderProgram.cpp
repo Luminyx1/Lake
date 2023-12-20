@@ -94,7 +94,6 @@ lake::ShaderProgram::ShaderProgram(const std::string& vshPath, const std::string
 
         glDetachShader(mID, vsh.getID());
         glDetachShader(mID, fsh.getID());
-
     }
 
     glValidateProgram(mID);

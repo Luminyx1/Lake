@@ -87,3 +87,5 @@ namespace lake {
     };
 
 } // namespace lake
+
+#define LK_REGISTER_ENTITY(CLASS) static inline const lake::Entity::RegisterEntity<CLASS> LK_CONCAT(lk_register_entity_, __LINE__){#CLASS}

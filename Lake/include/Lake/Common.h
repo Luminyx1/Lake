@@ -48,3 +48,6 @@ static_assert(sizeof(f64) == 8, "f64 is not 8 bytes");
 #include <cstring>
 
 #define LK_FILENAME (std::strrchr(__FILE__, '\\') ? std::strrchr(__FILE__, '\\') + 1 : __FILE__)
+
+#define LK_TOKENPASTE_(x, y) x ## y
+#define LK_CONCAT(x, y) LK_TOKENPASTE_(x, y)

@@ -13,6 +13,9 @@
 #include <algorithm>
 
 class CircleEntity final : public lake::Entity {
+    //* Register our class so we can create it from a scene file.
+    LK_REGISTER_ENTITY(CircleEntity);
+
 public:
     CircleEntity(lake::Entity::Properties properties)
         : Entity()
@@ -124,6 +127,3 @@ private:
     i32 mMousedown;
     f32 mTime;
 };
-
-//* Register our entity so we can create it from a scene file.
-static const lake::Entity::RegisterEntity<CircleEntity> circleEntity("CircleEntity");

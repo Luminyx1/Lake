@@ -4,6 +4,9 @@
 #include "Lake/JsonHelpers.h"
 
 class MainCamera final : public lake::Entity {
+    //* Register our class so we can create it from a scene file.
+    LK_REGISTER_ENTITY(MainCamera);
+
 public:
     MainCamera(lake::Entity::Properties properties)
         : Entity()
@@ -56,6 +59,3 @@ public:
 private:
     glm::vec3 mPosition, mLookTarget;
 };
-
-//* Register our entity so we can create it from a scene file.
-lake::Entity::RegisterEntity<MainCamera> mainCamera("MainCamera");
