@@ -5,6 +5,7 @@
 #include "Lake/BoxColliderComponent.h"
 #include "Lake/Graphics.h"
 #include "Lake/JsonHelpers.h"
+#include "Lake/TagComponent.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
@@ -30,6 +31,9 @@ public:
 
         // Add a collider component so other entities can collide with us. Shape is Box (rectangular), and don't register a callback since we don't need to act here.
         this->addComponent<lake::BoxColliderComponent>(new lake::BoxColliderComponent(this, mScale, glm::vec2(mPosition.x, mPosition.y)));
+
+        // Add a tag component so we can identify this entity later.
+        this->addComponent<lake::TagComponent>(new lake::TagComponent("specificBoxNumber1"));
     }
 
     ~BoxEntity() override = default;

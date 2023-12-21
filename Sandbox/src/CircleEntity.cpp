@@ -6,6 +6,7 @@
 #include "Lake/Graphics.h"
 #include "Lake/JsonHelpers.h"
 #include "Lake/Scene.h"
+#include "Lake/TagComponent.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
@@ -40,7 +41,13 @@ public:
             static const std::size_t targetHash = std::hash<std::string>{}("BoxEntity"); // This is the entity we are interested in checking collisions with.
 
             if (other->getParent()->getIdentifierHash() == targetHash) {
-                mRotateNextFrame = true;
+                std::span<lake::TagComponent*> tags = other->getParent()->getComponents<lake::TagComponent>();
+                for (auto tag : tags) {
+                    if (tag->getTag() == "specificBoxNumber1") {
+                        // If we are colliding with a box that has the specified tag, rotate next frame.
+                        mRotateNextFrame = true;
+                    }
+                }
             }
         });
         this->addComponent<lake::CircleColliderComponent>(collider);
