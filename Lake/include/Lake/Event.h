@@ -28,23 +28,30 @@ namespace lake {
     } // namespace EventType
 
     class Event {
+    protected:
+        Event(const u32 type)
+            : mType(type)
+        { }
+
     public:
         virtual ~Event() = default;
 
-        virtual u32 getType() const = 0;
+        [[nodiscard]] u32 getType() const { return mType; }
+
+    private:
+        u32 mType;
     };
 
     class WindowResizeEvent : public Event {
     public:
         WindowResizeEvent(i32 width, i32 height)
-            : mWidth(width), mHeight(height)
+            : Event(EventType::WindowResize)
+            , mWidth(width), mHeight(height)
         { }
 
         ~WindowResizeEvent() override = default;
 
         [[nodiscard]] glm::u32vec2 getSize() const { return glm::u32vec2(mWidth, mHeight); }
-
-        u32 getType() const override { return EventType::WindowResize; }
 
     private:
         i32 mWidth;
@@ -53,18 +60,23 @@ namespace lake {
 
     class WindowMinimizeEvent : public Event {
     public:
-        u32 getType() const override { return EventType::WindowMinimize; }
+        WindowMinimizeEvent()
+            : Event(EventType::WindowMinimize)
+        { }
     };
 
     class WindowMaximizeEvent : public Event {
     public:
-        u32 getType() const override { return EventType::WindowMaximize; }
+        WindowMaximizeEvent()
+            : Event(EventType::WindowMaximize)
+        { }
     };
 
     class KeyEvent : public Event {
     public:
-        KeyEvent(i32 key, i32 scancode, i32 action, i32 mods)
-            : mKey(key), mScanCode(scancode), mAction(action), mMods(mods)
+        KeyEvent(u32 type, i32 key, i32 scancode, i32 action, i32 mods)
+            : Event(type)
+            , mKey(key), mScanCode(scancode), mAction(action), mMods(mods)
         { }
 
         ~KeyEvent() override = default;
@@ -84,34 +96,29 @@ namespace lake {
     class KeyPressEvent : public KeyEvent {
     public:
         KeyPressEvent(i32 key, i32 scancode, i32 mods)
-            : KeyEvent(key, scancode, GLFW_PRESS, mods)
+            : KeyEvent(EventType::KeyPress, key, scancode, GLFW_PRESS, mods)
         { }
-
-        u32 getType() const override { return EventType::KeyPress; }
     };
 
     class KeyReleaseEvent : public KeyEvent {
     public:
         KeyReleaseEvent(i32 key, i32 scancode, i32 mods)
-            : KeyEvent(key, scancode, GLFW_RELEASE, mods)
+            : KeyEvent(EventType::KeyRelease, key, scancode, GLFW_RELEASE, mods)
         { }
-
-        u32 getType() const override { return EventType::KeyRelease; }
     };
 
     class KeyRepeatEvent : public KeyEvent {
     public:
         KeyRepeatEvent(i32 key, i32 scancode, i32 mods)
-            : KeyEvent(key, scancode, GLFW_REPEAT, mods)
+            : KeyEvent(EventType::KeyRepeat, key, scancode, GLFW_REPEAT, mods)
         { }
-
-        u32 getType() const override { return EventType::KeyRepeat; }
     };
 
     class MouseEvent : public Event {
     public:
-        MouseEvent(i32 button, i32 action, i32 mods)
-            : mButton(button), mAction(action), mMods(mods)
+        MouseEvent(u32 type, i32 button, i32 action, i32 mods)
+            : Event(type)
+            , mButton(button), mAction(action), mMods(mods)
         { }
 
         ~MouseEvent() override = default;
@@ -129,32 +136,27 @@ namespace lake {
     class MousePressEvent : public MouseEvent {
     public:
         MousePressEvent(i32 button, i32 mods)
-            : MouseEvent(button, GLFW_PRESS, mods)
+            : MouseEvent(EventType::MousePress, button, GLFW_PRESS, mods)
         { }
-
-        u32 getType() const override { return EventType::MousePress; }
     };
 
     class MouseReleaseEvent : public MouseEvent {
     public:
         MouseReleaseEvent(i32 button, i32 mods)
-            : MouseEvent(button, GLFW_RELEASE, mods)
+            : MouseEvent(EventType::MouseRelease, button, GLFW_RELEASE, mods)
         { }
-
-        u32 getType() const override { return EventType::MouseRelease; }
     };
 
     class MouseMoveEvent : public Event {
     public:
         MouseMoveEvent(f64 x, f64 y)
-            : mX(x), mY(y)
+            : Event(EventType::MouseMove)
+            , mX(x), mY(y)
         { }
 
         ~MouseMoveEvent() override = default;
 
         [[nodiscard]] glm::vec2 getPosition() const { return glm::vec2(mX, mY); }
-
-        u32 getType() const override { return EventType::MouseMove; }
 
     private:
         f64 mX;
@@ -164,14 +166,13 @@ namespace lake {
     class MouseScrollEvent : public Event {
     public:
         MouseScrollEvent(f64 x, f64 y)
-            : mX(x), mY(y)
+            : Event(EventType::MouseScroll)
+            , mX(x), mY(y)
         { }
 
         ~MouseScrollEvent() override = default;
 
         [[nodiscard]] glm::vec2 getOffset() const { return glm::vec2(mX, mY); }
-
-        u32 getType() const override { return EventType::MouseScroll; }
 
     private:
         f64 mX;
