@@ -17,9 +17,13 @@ namespace lake {
         void update(const f32 timeStep);
         void onEvent(Event* event);
 
+        void switchScene(const std::string& path);
+
         const std::vector<Entity*>& getEntities() const { return mEntities; }
 
     private:
+        void loadScene(const std::string& path);
+
         std::vector<Entity*> mEntities;
     };
 

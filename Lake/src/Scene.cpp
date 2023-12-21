@@ -5,6 +5,42 @@
 #include <simdjson.h>
 
 lake::Scene::Scene(const std::string& path) {
+    this->loadScene(path);
+}
+
+lake::Scene::~Scene() {
+    for (auto& entity : mEntities) {
+        delete entity;
+    }
+}
+
+void lake::Scene::update(const f32 timeStep) {
+    for (auto entity : mEntities) {
+        entity->onUpdate(timeStep);
+    }
+}
+
+void lake::Scene::onEvent(lake::Event* event) {
+    for (auto entity : mEntities) {
+        entity->onEvent(event);
+    }
+}
+
+void lake::Scene::switchScene(const std::string& path) {
+    for (auto& entity : mEntities) {
+        delete entity;
+    }
+
+    mEntities.clear();
+
+    this->loadScene(path);
+}
+
+void lake::Scene::loadScene(const std::string& path) {
+    /**
+     * TODO: Preload assets while running the current scene before switching to the new scene to avoid stuttering
+    */
+
     simdjson::ondemand::parser parser;
     simdjson::padded_string json = simdjson::padded_string::load(path);
     simdjson::ondemand::document document = parser.iterate(json);
@@ -35,23 +71,5 @@ lake::Scene::Scene(const std::string& path) {
         }
     } catch (simdjson::simdjson_error& error) {
         lake::error("Error parsing scene file '", path, "': ", error.what());
-    }
-}
-
-lake::Scene::~Scene() {
-    for (auto& entity : mEntities) {
-        delete entity;
-    }
-}
-
-void lake::Scene::update(const f32 timeStep) {
-    for (auto entity : mEntities) {
-        entity->onUpdate(timeStep);
-    }
-}
-
-void lake::Scene::onEvent(lake::Event* event) {
-    for (auto entity : mEntities) {
-        entity->onEvent(event);
     }
 }
