@@ -10,7 +10,7 @@
 #include <imgui.h>
 
 class BoxEntity final : public lake::Entity {
-    //* Register our entity class so we can create it from a scene file.
+    //* Register our class so we can create it from a scene file.
     LK_REGISTER_ENTITY(BoxEntity);
 
 public:
@@ -38,7 +38,7 @@ public:
         //* Act behaviour for our entity. This is called every frame.
 
         // Move the entity based on the direction we want to move in. Move values are determined by onEvent (keyboard input).
-        mPosition += glm::vec3(timeStep * mDirectionX * 3.0f, timeStep * mDirectionY * 3.0f, 0.0f);
+        mPosition += glm::vec3(timeStep * mDirectionX, timeStep * mDirectionY, 0.0f);
 
         // Update the sprite component's matrix to reflect the new position and scale. We use a for loop here because we can have multiple drawable components, however in this case we only have one.
         std::span<lake::DrawableComponent*> drawableComponents = this->getComponents<lake::DrawableComponent>();

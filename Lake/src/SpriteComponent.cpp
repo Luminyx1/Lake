@@ -27,19 +27,17 @@ namespace {
 
             constexpr u32 stride = 2 * sizeof(f32);
 
-            glGenBuffers(1, &objects.vbo);
-            glBindBuffer(GL_ARRAY_BUFFER, objects.vbo);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
+            glCreateBuffers(1, &objects.vbo);
+            glNamedBufferData(objects.vbo, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
 
-            glGenVertexArrays(1, &objects.vao);
-            glBindVertexArray(objects.vao);
+            glCreateBuffers(1, &objects.ebo);
+            glNamedBufferData(objects.ebo, sizeof(indices), &indices[0], GL_STATIC_DRAW);
 
-            glGenBuffers(1, &objects.ebo);
-            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, objects.ebo);
-            glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
-
-            glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, stride, nullptr);
-            glEnableVertexAttribArray(0);
+            glCreateVertexArrays(1, &objects.vao);
+            glVertexArrayVertexBuffer(objects.vao, 0, objects.vbo, 0, stride);
+            glVertexArrayAttribFormat(objects.vao, 0, 2, GL_FLOAT, GL_FALSE, 0);
+            glEnableVertexArrayAttrib(objects.vao, 0);
+            glVertexArrayElementBuffer(objects.vao, objects.ebo);
 
             inited = true;
         }

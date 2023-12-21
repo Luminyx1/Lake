@@ -72,7 +72,7 @@ public:
 
         // Smoothly move left and right with consideration for the time step. Sin is used to make the movement smooth.
         mTime += timeStep;
-        mPosition.x = glm::sin(glm::radians(mTime * 100.0f));
+        mPosition.x = glm::sin(glm::radians(mTime * 10.0f));
 
         // Update the sprite component's matrix to reflect the new position, rotation and scale. We use a for loop here because we can have multiple drawable components, however in this case we only have one.
         std::span<lake::DrawableComponent*> drawableComponents = this->getComponents<lake::DrawableComponent>();
