@@ -1,6 +1,7 @@
 #include "Lake/Scene.h"
 
 #include "Lake/Log.h"
+#include "Lake/TagComponent.h"
 
 #include <simdjson.h>
 
@@ -64,8 +65,15 @@ void lake::Scene::loadScene(const std::string& path) {
             const auto& [name, data] = *entityRegistration;
 
             Entity* newEntity = data.factory(properties);
+
             newEntity->mRegistry = &data;
             newEntity->mScene = this;
+            auto tags = entityObject["properties"]["tags"];
+            if (tags.error() != simdjson::error_code::NO_SUCH_FIELD) { //? Should we set these here or in the constructor?
+                for (auto tag : tags.get_array()) {
+                    newEntity->addComponent<lake::TagComponent>(new lake::TagComponent(std::string{tag.get_string().value()}));
+                }
+            }
 
             mEntities.push_back(newEntity);
         }
