@@ -9,7 +9,7 @@
 
 namespace lake {
 
-    class Graphics {
+    class Graphics final {
     public:
         struct Properties {
             struct WindowProperties {

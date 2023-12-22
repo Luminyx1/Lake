@@ -2,6 +2,7 @@
 
 #include "Lake/Log.h"
 #include "Lake/SpriteComponent.h"
+#include "Lake/SoundComponent.h"
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -17,6 +18,7 @@ lake::Application::Application(const lake::Application::Properties& properties)
     })
     , mScene(properties.initialScene)
     , mPhysics()
+    , mAudio()
 { }
 
 lake::Application::~Application() {
@@ -26,7 +28,7 @@ lake::Application::~Application() {
 void lake::Application::run() {
     this->intermoduleDataTransfer();
 
-    while (mGraphics.update()) { // Main loop
+    do { // Main loop
         const f32 ts = mGraphics.getTimeStep();
 
         this->onUpdate(ts);
@@ -35,7 +37,7 @@ void lake::Application::run() {
         mScene.update(ts);
 
         this->intermoduleDataTransfer();
-    }
+    } while (mGraphics.update());
 }
 
 void lake::Application::handleEvents() {
@@ -82,6 +84,19 @@ void lake::Application::intermoduleDataTransfer() {
         }
 
         mPhysics.update(mGraphics.getTimeStep(), circleColliders, boxColliders);
+    }
+    { // Link audio and scene
+        const std::vector<Entity*>& entities = mScene.getEntities();
+        
+        std::vector<lake::SoundComponent*> soundComponents; soundComponents.reserve(entities.size());
+
+        for (auto entity : entities) {
+            for (auto soundComponent : entity->getComponents<lake::SoundComponent>()) {
+                soundComponents.push_back(soundComponent);
+            }
+        }
+
+        mAudio.update(soundComponents);
     }
 }
 

@@ -24,7 +24,12 @@ project "Lake"
         "vendor/glm/",
         "vendor/imgui",
         "vendor/simdjson/include",
-        "vendor/stb"
+        "vendor/stb",
+        "vendor/fmod/include"
+    }
+
+    libdirs {
+        "vendor/fmod/lib"
     }
 
     files {
@@ -41,6 +46,9 @@ project "Lake"
         systemversion "latest"
         defines {
             "LK_PLATFORM_WINDOWS"
+        }
+        links {
+            "fmodL_vc.lib"
         }
     
     filter "configurations:Debug"

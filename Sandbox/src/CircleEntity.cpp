@@ -7,6 +7,7 @@
 #include "Lake/JsonHelpers.h"
 #include "Lake/Scene.h"
 #include "Lake/TagComponent.h"
+#include "Lake/SoundComponent.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
@@ -51,6 +52,8 @@ public:
             }
         });
         this->addComponent<lake::CircleColliderComponent>(collider);
+
+        this->addComponent<lake::SoundComponent>(new lake::SoundComponent("sfx.mp3"));
     }
 
     ~CircleEntity() override = default;
@@ -62,6 +65,12 @@ public:
         if (mRotateNextFrame || mMousedown != 0) {
             mRotation += timeStep * 1800.0f * (mMousedown != 0) ? mMousedown : 1;
             mRotateNextFrame = false;
+
+            // Play a sound
+            lake::SoundComponent* sound = this->getComponents<lake::SoundComponent>()[0];
+            if (!sound->isPlaying()) {
+                sound->play();
+            }
         }
 
         // Get the camera entity and unproject the mouse position to world coordinates.

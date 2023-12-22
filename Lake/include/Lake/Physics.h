@@ -8,7 +8,7 @@
 
 namespace lake {
 
-    class Physics {
+    class Physics final {
     public:
         Physics() = default;
         ~Physics() = default;

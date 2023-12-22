@@ -53,7 +53,7 @@ void lake::Texture::initFromFile(const std::string& path, const FilterMode filte
 
     this->initFromData(data, channels, size, filterMode);
 
-    lake::info("Loaded texture from file: ", path);
+    lake::trace("Loaded texture from file: ", path);
 }
 
 void lake::Texture::initFromData(const u8* data, const u32 channelCount, const glm::u32vec2& size, const FilterMode filterMode) {

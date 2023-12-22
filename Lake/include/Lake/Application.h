@@ -5,6 +5,7 @@
 #include "Lake/Graphics.h"
 #include "Lake/Physics.h"
 #include "Lake/Scene.h"
+#include "Lake/Audio.h"
 
 #include <queue>
 
@@ -44,6 +45,7 @@ namespace lake {
         Graphics mGraphics;
         Scene mScene;
         Physics mPhysics;
+        Audio mAudio;
     };
 
 

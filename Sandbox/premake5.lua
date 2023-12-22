@@ -22,7 +22,9 @@ project "Sandbox"
         "../Lake/vendor/glfw/include",
         "../Lake/vendor/glm/",
         "../Lake/vendor/imgui",
-        "../Lake/vendor/simdjson/include"
+        "../Lake/vendor/simdjson/include",
+        "../Lake/vendor/stb",
+        "../Lake/vendor/fmod/include"
     }
 
     files {

@@ -72,10 +72,10 @@ lake::Graphics::Graphics(const lake::Graphics::Properties& properties)
 #ifndef LK_DIST
     static const auto debugCallback = [](GLenum, GLenum, GLuint, GLenum severity, GLsizei, const GLchar* message, const void*) {
         switch (severity) {
-            case GL_DEBUG_SEVERITY_HIGH:            return lake::error(message);
-            case GL_DEBUG_SEVERITY_MEDIUM:          return lake::warn(message);
-            case GL_DEBUG_SEVERITY_LOW:             return lake::info(message);
-            //case GL_DEBUG_SEVERITY_NOTIFICATION:    return lake::trace(message);
+            case GL_DEBUG_SEVERITY_HIGH:            return lake::error(std::string{"GLFW"} + message);
+            case GL_DEBUG_SEVERITY_MEDIUM:          return lake::warn(std::string{"GLFW"} + message);
+            case GL_DEBUG_SEVERITY_LOW:             return lake::info(std::string{"GLFW"} + message);
+            case GL_DEBUG_SEVERITY_NOTIFICATION:    return lake::trace(std::string{"GLFW"} + message);
         }
     };
 

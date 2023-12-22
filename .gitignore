@@ -52,3 +52,11 @@ notes/
 
 # Exclude
 !premake5.exe
+Lake/vendor/fmod/include/fmod.h
+Lake/vendor/fmod/include/fmod.hpp
+Lake/vendor/fmod/include/fmod_codec.h
+Lake/vendor/fmod/include/fmod_common.h
+Lake/vendor/fmod/include/fmod_dsp.h
+Lake/vendor/fmod/include/fmod_dsp_effects.h
+Lake/vendor/fmod/include/fmod_errors.h
+Lake/vendor/fmod/include/fmod_output.h
