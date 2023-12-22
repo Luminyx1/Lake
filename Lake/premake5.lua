@@ -33,7 +33,7 @@ project "Lake"
     }
 
     files {
-        "src/**.cpp",
+        "src/**.cpp"
     }
 
     flags {

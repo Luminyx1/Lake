@@ -114,18 +114,44 @@ lake::Audio::~Audio() {
 
 void lake::Audio::update(std::span<SoundComponent*> soundComponents) {
     for (SoundComponent* soundComponent : soundComponents) {
-        if (soundComponent->mWantsToPlay) {
+        if (soundComponent->getWantsToPlay()) {
+            // First check our cache of loaded sounds
+            const auto it = mSounds.find(std::make_pair(soundComponent->getPath(), soundComponent->getMode()));
+            if (it != mSounds.end()) {
+                const auto sound = it->second;
+
+                lake::info("Playing cached sound: ", soundComponent->getPath());
+
+                FMOD::Channel* channel = nullptr;
+                mSystem->playSound(sound, nullptr, false, &channel);
+                soundComponent->setChannel(channel);
+                soundComponent->setWantsToPlay(false);
+                continue;
+            }
+
+            // If this sound has already been loaded with the same mode, just play it
             FMOD::Sound* sound = nullptr;
-            mSystem->createSound(soundComponent->getPath().c_str(), FMOD_LOWMEM, nullptr, &sound);
+            mSystem->createSound(soundComponent->getPath().c_str(), FMOD_LOWMEM | soundComponent->getMode(), nullptr, &sound);
 
             LK_ASSERT(sound != nullptr, "Failed to load sound: ", soundComponent->getPath());
 
+            lake::info("Playing sound: ", soundComponent->getPath());
+            mSounds[std::make_pair(soundComponent->getPath(), soundComponent->getMode())] = sound;
+
             FMOD::Channel* channel = nullptr;
             mSystem->playSound(sound, nullptr, false, &channel);
-            soundComponent->mChannel = channel;
-            soundComponent->mWantsToPlay = false;
+            soundComponent->setChannel(channel);
+            soundComponent->setWantsToPlay(false);
         }
     }
 
     mSystem->update();
+}
+
+void lake::Audio::clearCache() {
+    for (auto& [key, sound] : mSounds) {
+        sound->release();
+    }
+
+    mSounds.clear();
 }

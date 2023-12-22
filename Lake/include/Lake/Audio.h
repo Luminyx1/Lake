@@ -3,9 +3,13 @@
 #include "Lake/Common.h"
 #include "Lake/SoundComponent.h"
 
+#include "Lake/PairUtils.h"
+
 #include <fmod.hpp>
 
 #include <span>
+#include <unordered_map>
+#include <tuple>
 
 namespace lake {
 
@@ -19,8 +23,11 @@ namespace lake {
 
         void update(std::span<SoundComponent*> soundComponents);
 
+        void clearCache();
+
     private:
         FMOD::System* mSystem;
+        std::unordered_map<std::pair<std::string, FMOD_MODE>, FMOD::Sound*, lake::PairHash, lake::PairEqual> mSounds;
     };
 
 }

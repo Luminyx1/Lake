@@ -41,7 +41,11 @@ void lake::Application::run() {
 }
 
 void lake::Application::handleEvents() {
-    for (auto& event : sEventQueue) {
+    std::deque<lake::Event*> eventQueueCopy;
+    eventQueueCopy.swap(sEventQueue);
+
+    for (auto& event : eventQueueCopy) {
+        this->onEventInternal(event);
         this->onEvent(event);
 
         mScene.onEvent(event);
@@ -49,8 +53,6 @@ void lake::Application::handleEvents() {
 
         delete event;
     }
-
-    sEventQueue.clear();
 }
 
 void lake::Application::intermoduleDataTransfer() {
@@ -97,6 +99,14 @@ void lake::Application::intermoduleDataTransfer() {
         }
 
         mAudio.update(soundComponents);
+    }
+}
+
+void lake::Application::onEventInternal(lake::Event* event) {
+    if (event->getType() == lake::EventType::SceneSwitch) {
+        const auto sceneSwitchEvent = static_cast<lake::SceneSwitchEvent*>(event);
+
+        mAudio.clearCache();
     }
 }
 

@@ -38,6 +38,7 @@ namespace lake {
         void run();
         void handleEvents();
         void intermoduleDataTransfer();
+        void onEventInternal(Event* event);
 
         static std::deque<Event*> sEventQueue;
 

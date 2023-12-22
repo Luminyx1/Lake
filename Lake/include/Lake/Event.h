@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Lake/Common.h"
+#include "Lake/Log.h"
 
 #include <glm/glm.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include <string>
 
 namespace lake {
 
@@ -22,6 +25,8 @@ namespace lake {
             MouseRelease,
             MouseMove,
             MouseScroll,
+
+            SceneSwitch,
 
             Count // Start your own events from here
         };
@@ -177,6 +182,21 @@ namespace lake {
     private:
         f64 mX;
         f64 mY;
+    };
+
+    class SceneSwitchEvent : public Event {
+    public:
+        SceneSwitchEvent(const std::string& sceneName)
+            : Event(EventType::SceneSwitch)
+            , mSceneName(sceneName)
+        { }
+
+        ~SceneSwitchEvent() override = default;
+
+        [[nodiscard]] const std::string& getSceneName() const { return mSceneName; }
+
+    private:
+        std::string mSceneName;
     };
 
 } // namespace lake

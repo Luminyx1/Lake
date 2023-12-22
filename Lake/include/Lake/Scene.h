@@ -21,10 +21,13 @@ namespace lake {
 
         const std::vector<Entity*>& getEntities() const { return mEntities; }
 
+        [[nodiscard]] const std::string& getPath() const { return mPath; }
+
     private:
         void loadScene(const std::string& path);
 
         std::vector<Entity*> mEntities;
+        std::string mPath;
     };
 
 } // namespace lake

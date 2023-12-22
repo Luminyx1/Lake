@@ -6,6 +6,7 @@
 #include "Lake/Graphics.h"
 #include "Lake/JsonHelpers.h"
 #include "Lake/TagComponent.h"
+#include "Lake/Scene.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
@@ -32,7 +33,7 @@ public:
         // Add a collider component so other entities can collide with us. Shape is Box (rectangular), and don't register a callback since we don't need to act here.
         this->addComponent<lake::BoxColliderComponent>(new lake::BoxColliderComponent(this, mScale, glm::vec2(mPosition.x, mPosition.y)));
 
-        // Add a tag component so we can identify this entity later. This can also be done with properties in the scene file.
+        // Add a tag component so we can identify this entity later. This can also be done with properties in the scene file to add it to a specific instance.
         //this->addComponent<lake::TagComponent>(new lake::TagComponent("specificBoxNumber1"));
     }
 
@@ -77,6 +78,11 @@ public:
                 mDirectionX = -1;
             } else if (keyEvent->getKey() == GLFW_KEY_D) {
                 mDirectionX = 1;
+            }
+
+            else if (keyEvent->getKey() == GLFW_KEY_R) {
+                // Reload the scene. This is useful for testing changes to the scene file.
+                mScene->switchScene(mScene->getPath());
             }
         } else if (event->getType() == lake::EventType::KeyRelease) {
             const auto keyEvent = static_cast<lake::KeyReleaseEvent*>(event);

@@ -2,6 +2,7 @@
 
 #include "Lake/Log.h"
 #include "Lake/TagComponent.h"
+#include "Lake/Application.h"
 
 #include <simdjson.h>
 
@@ -28,6 +29,8 @@ void lake::Scene::onEvent(lake::Event* event) {
 }
 
 void lake::Scene::switchScene(const std::string& path) {
+    Application::raiseEvent(new SceneSwitchEvent(path));
+
     for (auto& entity : mEntities) {
         delete entity;
     }
@@ -39,8 +42,11 @@ void lake::Scene::switchScene(const std::string& path) {
 
 void lake::Scene::loadScene(const std::string& path) {
     /**
-     * TODO: Preload assets while running the current scene before switching to the new scene to avoid stuttering
+     * TODO: Preload assets while running the current scene before switching to the new scene to avoid stuttering (including audio)
+     * * NOTE: Move SceneSwitchEvent firing to after the assets have been loaded because the audio cache might be cleared too early
     */
+
+    mPath = path;
 
     simdjson::ondemand::parser parser;
     simdjson::padded_string json = simdjson::padded_string::load(path);
