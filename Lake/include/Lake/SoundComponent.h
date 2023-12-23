@@ -20,7 +20,7 @@ namespace lake {
     
     public:
         SoundComponent(const std::string& path, const LoopMode loopMode = LoopMode::None, bool streamed = false);
-        ~SoundComponent();
+        ~SoundComponent() override = default;
 
         void play();
 

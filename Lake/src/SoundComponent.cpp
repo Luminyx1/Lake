@@ -3,16 +3,12 @@
 lake::SoundComponent::SoundComponent(const std::string& path, const LoopMode loopMode, bool streamed)
     : mPath(path)
     , mChannel(nullptr)
-    , mMode(FMOD_DEFAULT | static_cast<FMOD_MODE>(loopMode))
+    , mMode(static_cast<FMOD_MODE>(loopMode))
     , mWantsToPlay(false)
     , mStreamed(streamed)
     , mPitch(1.0f)
     , mVolume(1.0f)
 { }
-
-lake::SoundComponent::~SoundComponent() {
-    
-}
 
 void lake::SoundComponent::play() {
     if (mWantsToPlay) {
