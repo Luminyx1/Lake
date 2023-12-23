@@ -66,11 +66,11 @@ public:
             mRotation += timeStep * 1800.0f * (mMousedown != 0) ? mMousedown : 1;
             mRotateNextFrame = false;
 
-            // Play a sound
+            // Play a sound effect when we rotate.
             lake::SoundComponent* sound = this->getComponents<lake::SoundComponent>()[0];
-            if (!sound->isPlaying()) {
-                sound->play();
-            }
+            sound->setPitch(1.0f + (mRotation / 360.0f));
+            sound->setVolume(0.1f);
+            sound->play();
         }
 
         // Get the camera entity and unproject the mouse position to world coordinates.

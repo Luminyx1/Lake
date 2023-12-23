@@ -113,35 +113,49 @@ lake::Audio::~Audio() {
 }
 
 void lake::Audio::update(std::span<SoundComponent*> soundComponents) {
+    static const auto playSound = [this](FMOD::Sound* sound, SoundComponent* soundComponent) {
+        FMOD::Channel* channel = nullptr;
+        mSystem->playSound(sound, nullptr, false, &channel);
+        channel->setPitch(soundComponent->getPitch());
+        channel->setVolume(soundComponent->getVolume());
+        soundComponent->setChannel(channel);
+        soundComponent->setWantsToPlay(false);
+    };
+
     for (SoundComponent* soundComponent : soundComponents) {
         if (soundComponent->getWantsToPlay()) {
             // First check our cache of loaded sounds
+            //? TODO: Do we need to cache streamed sounds?
             const auto it = mSounds.find(std::make_pair(soundComponent->getPath(), soundComponent->getMode()));
             if (it != mSounds.end()) {
                 const auto sound = it->second;
 
-                lake::info("Playing cached sound: ", soundComponent->getPath());
+                lake::trace("Playing cached sound: ", soundComponent->getPath());
 
-                FMOD::Channel* channel = nullptr;
-                mSystem->playSound(sound, nullptr, false, &channel);
-                soundComponent->setChannel(channel);
-                soundComponent->setWantsToPlay(false);
+                playSound(sound, soundComponent);
                 continue;
             }
 
             // If this sound has already been loaded with the same mode, just play it
             FMOD::Sound* sound = nullptr;
-            mSystem->createSound(soundComponent->getPath().c_str(), FMOD_LOWMEM | soundComponent->getMode(), nullptr, &sound);
+            FMOD_MODE mode = soundComponent->getMode();
+            mode |= FMOD_LOWMEM;
+            if (soundComponent->isStreamed()) {
+                mode |= FMOD_CREATESTREAM;
+                if (soundComponent->getMode() & FMOD_LOOP_BIDI) {
+                    lake::warn("Streamed sounds cannot be played in LoopBackAndForth mode, defaulting to LoopFromStart");
+                    mode &= ~FMOD_LOOP_BIDI;
+                    mode |= FMOD_LOOP_NORMAL;
+                }
+            }
+            mSystem->createSound(soundComponent->getPath().c_str(), mode, nullptr, &sound);
 
             LK_ASSERT(sound != nullptr, "Failed to load sound: ", soundComponent->getPath());
 
-            lake::info("Playing sound: ", soundComponent->getPath());
+            lake::trace("Playing sound: ", soundComponent->getPath());
             mSounds[std::make_pair(soundComponent->getPath(), soundComponent->getMode())] = sound;
 
-            FMOD::Channel* channel = nullptr;
-            mSystem->playSound(sound, nullptr, false, &channel);
-            soundComponent->setChannel(channel);
-            soundComponent->setWantsToPlay(false);
+            playSound(sound, soundComponent);
         }
     }
 
