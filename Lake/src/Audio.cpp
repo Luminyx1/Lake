@@ -130,8 +130,6 @@ void lake::Audio::update(std::span<SoundComponent*> soundComponents) {
             if (it != mSounds.end()) {
                 const auto sound = it->second;
 
-                lake::trace("Playing cached sound: ", soundComponent->getPath());
-
                 playSound(sound, soundComponent);
                 continue;
             }
@@ -152,7 +150,7 @@ void lake::Audio::update(std::span<SoundComponent*> soundComponents) {
 
             LK_ASSERT(sound != nullptr, "Failed to load sound: ", soundComponent->getPath());
 
-            lake::trace("Playing sound: ", soundComponent->getPath());
+            lake::trace("Sound cache miss: ", soundComponent->getPath());
             mSounds[std::make_pair(soundComponent->getPath(), soundComponent->getMode())] = sound;
 
             playSound(sound, soundComponent);

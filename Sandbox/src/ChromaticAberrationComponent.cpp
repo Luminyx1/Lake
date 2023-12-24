@@ -24,6 +24,9 @@ void ChromaticAberrationComponent::draw(const lake::RenderInfo& renderInfo) {
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
     lake::Framebuffer::blit(mWorkBuffer, *renderInfo.framebuffer, {0, 0}, mWorkBuffer.getSize(), {0, 0}, renderInfo.framebuffer->getSize(), static_cast<u32>(lake::Framebuffer::Type::Color));
+
+    // Remember to re-bind the framebuffer after we are done.
+    renderInfo.framebuffer->bind();
 }
 
 void ChromaticAberrationComponent::resize(const glm::u32vec2& size) {

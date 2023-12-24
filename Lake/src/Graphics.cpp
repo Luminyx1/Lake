@@ -76,7 +76,7 @@ lake::Graphics::Graphics(const lake::Graphics::Properties& properties)
             case GL_DEBUG_SEVERITY_HIGH:            return lake::error(std::string{"OpenGL: "} + message);
             case GL_DEBUG_SEVERITY_MEDIUM:          return lake::warn(std::string{"OpenGL: "} + message);
             case GL_DEBUG_SEVERITY_LOW:             return lake::info(std::string{"OpenGL: "} + message);
-            case GL_DEBUG_SEVERITY_NOTIFICATION:    return lake::trace(std::string{"OpenGL: "} + message);
+            //case GL_DEBUG_SEVERITY_NOTIFICATION:    return lake::trace(std::string{"OpenGL: "} + message);
         }
     };
 
