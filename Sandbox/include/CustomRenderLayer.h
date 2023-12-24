@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Lake/Layer.h"
 
 class CustomRenderLayer : public lake::Layer {

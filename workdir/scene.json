@@ -29,6 +29,9 @@
                 "volume": 0.8,
                 "pitch": 0.8
             }
+        },
+        {
+            "type": "PostProcessEffectEntity"
         }
     ]
 }

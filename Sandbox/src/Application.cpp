@@ -15,7 +15,10 @@ public:
         //* Initialize the environment for our application. This is called before the application loop starts.
 
         // Push layers to the layer stack. The order of layers is important, as they are called in order from top to bottom.
+        // TODO: Move this to scene with a Layer Registry?
         mGraphics.getLayerStack().pushLayer<CustomRenderLayer>("main"); // Render the main scene. We use a custom layer here to render our scene on a white background instead of the default black.
+        mGraphics.getLayerStack().pushLayer<lake::Layer>("pfx_chroma"); // Render the chromatic aberration post-process effect after the main scene has been rendered.
+        mGraphics.getLayerStack().pushLayer<lake::Layer>("pfx_fxaa");   // Render the FXAA post-process effect after the chromatic aberration effect has been rendered.
         mGraphics.getLayerStack().pushLayer<lake::ImGuiLayer>("ImGui"); // Render ImGui overlay.
 
         // Additional setup such as setting the ImGui style.
