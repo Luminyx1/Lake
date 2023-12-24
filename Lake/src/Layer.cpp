@@ -83,6 +83,8 @@ lake::Layer* lake::LayerStack::getLayer(const std::size_t hash) {
 void lake::LayerStack::resize(const glm::u32vec2& size) {
     glViewport(0, 0, size.x, size.y);
 
+    mFramebuffer.resize(size);
+
     for (auto& [hash, layer] : mLayers) {
         layer->resize(size);
     }

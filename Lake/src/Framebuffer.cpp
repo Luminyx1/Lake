@@ -74,7 +74,7 @@ void lake::Framebuffer::resize(const glm::u32vec2& size) {
     newTextureBuffers.reserve(mTextureBuffers.size());
 
     for (auto& textureBuffer : mTextureBuffers) {
-        newTextureBuffers.push_back(new Texture(textureBuffer->getSize(), textureBuffer->getFormat(), textureBuffer->getFilterMode()));
+        newTextureBuffers.push_back(new Texture(size, textureBuffer->getFormat(), textureBuffer->getFilterMode()));
         glNamedFramebufferTexture(mID, GL_COLOR_ATTACHMENT0 + static_cast<u32>(newTextureBuffers.size()) - 1, newTextureBuffers.back()->getID(), 0);
         delete textureBuffer;
     }
@@ -95,7 +95,15 @@ const lake::Framebuffer* lake::Framebuffer::getBackbuffer() {
 }
 
 void lake::Framebuffer::blit(const Framebuffer& src, const Framebuffer& dst, const glm::u32vec2& srcStart, const glm::u32vec2& srcEnd, const glm::u32vec2& dstStart, const glm::u32vec2& dstEnd, const u32 typeMask, const Texture::FilterMode filterMode) {
-    glBlitNamedFramebuffer(src.getID(), dst.getID(), srcStart.x, srcStart.y, srcEnd.x, srcEnd.y, dstStart.x, dstStart.y, dstEnd.x, dstEnd.y, typeMask, static_cast<GLenum>(filterMode));
+    u32 mask = 0;
+    if (typeMask & static_cast<u32>(Type::Color)) {
+        mask |= GL_COLOR_BUFFER_BIT;
+    }
+    if (typeMask & static_cast<u32>(Type::Depth)) {
+        mask |= GL_DEPTH_BUFFER_BIT;
+    }
+
+    glBlitNamedFramebuffer(src.getID(), dst.getID(), srcStart.x, srcStart.y, srcEnd.x, srcEnd.y, dstStart.x, dstStart.y, dstEnd.x, dstEnd.y, mask, static_cast<GLenum>(filterMode));
 }
 
 void lake::Framebuffer::addTextureBuffer(const Texture::Format fmt, const Texture::FilterMode enlargeFilter, const Texture::FilterMode shrinkFilter) {
