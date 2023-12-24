@@ -51,3 +51,15 @@ static_assert(sizeof(f64) == 8, "f64 is not 8 bytes");
 
 #define LK_TOKENPASTE_(x, y) x ## y
 #define LK_CONCAT(x, y) LK_TOKENPASTE_(x, y)
+
+#define LK_NO_COPY(type) \
+    type(const type&) = delete; \
+    type& operator=(const type&) = delete
+
+#define LK_NO_MOVE(type) \
+    type(type&&) = delete; \
+    type& operator=(type&&) = delete
+
+#define LK_NO_COPY_OR_MOVE(type) \
+    LK_NO_COPY(type); \
+    LK_NO_MOVE(type)

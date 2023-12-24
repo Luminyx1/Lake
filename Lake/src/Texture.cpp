@@ -12,6 +12,8 @@ std::unordered_map<std::string, std::tuple<u8*, glm::u32vec2, u32>> lake::Textur
 lake::Texture::Texture()
     : mID(GL_NONE)
     , mSize(0, 0)
+    , mFormat(Format::Count)
+    , mFilterMode(FilterMode::Count)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &mID);
 }
@@ -20,6 +22,19 @@ lake::Texture::Texture(const std::string& path, const FilterMode filterMode)
     : Texture()
 {
     this->initFromFile(path, filterMode);
+}
+
+lake::Texture::Texture(const glm::u32vec2& size, const Format fmt, const FilterMode filterMode)
+    : Texture()
+{
+    glTextureStorage2D(mID, 1, static_cast<GLenum>(fmt), size.x, size.y);
+
+    glTextureParameteri(mID, GL_TEXTURE_MIN_FILTER, static_cast<GLenum>(filterMode));
+    glTextureParameteri(mID, GL_TEXTURE_MAG_FILTER, static_cast<GLenum>(filterMode));
+
+    mSize = size;
+    mFormat = fmt;
+    mFilterMode = filterMode;
 }
 
 lake::Texture::~Texture() {
@@ -70,6 +85,8 @@ void lake::Texture::initFromData(const u8* data, const u32 channelCount, const g
         }
 
         glTextureSubImage2D(mID, 0, 0, 0, size.x, size.y, format, GL_UNSIGNED_BYTE, data);
+
+        mFormat = static_cast<Format>(format);
     };
 
     if (channelCount == 4) {
@@ -88,6 +105,8 @@ void lake::Texture::initFromData(const u8* data, const u32 channelCount, const g
     glTextureParameteri(mID, GL_TEXTURE_BASE_LEVEL, 0);
     glTextureParameteri(mID, GL_TEXTURE_MAX_LEVEL, 6);
     glGenerateTextureMipmap(mID);
+
+    mFilterMode = filterMode;
 }
 
 void lake::Texture::bind(const u32 slot) const {

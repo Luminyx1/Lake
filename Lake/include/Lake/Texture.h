@@ -11,6 +11,8 @@
 namespace lake {
 
     class Texture {
+        LK_NO_COPY(Texture);
+
     public:
         enum class FilterMode {
             Nearest = GL_NEAREST,
@@ -24,19 +26,33 @@ namespace lake {
             Count
         };
 
+        enum class Format {
+            RGB16F = GL_RGB16F,
+            RGB32F = GL_RGB32F,
+            R8 = GL_R8,
+            RGB8 = GL_RGB8,
+            RGBA8 = GL_RGBA8,
+            RGBA16F = GL_RGBA16F,
+            RGBA32F = GL_RGBA32F,
+            Depth24Stencil8 = GL_DEPTH24_STENCIL8,
+            Depth32FStencil8 = GL_DEPTH32F_STENCIL8,
+            
+            Count
+        };
+
     private:
         Texture();
 
     public:
         Texture(const std::string& path, const FilterMode filterMode = FilterMode::Linear);
+        Texture(const glm::u32vec2& size, const Format fmt, const FilterMode filterMode = FilterMode::Linear);
         ~Texture();
-
-        Texture(const Texture&) = delete;
-        Texture& operator=(const Texture&) = delete;
 
         Texture(Texture&& other) noexcept
             : mID(other.mID)
             , mSize(other.mSize)
+            , mFormat(other.mFormat)
+            , mFilterMode(other.mFilterMode)
         {
             other.mID = GL_NONE;
         }
@@ -45,6 +61,8 @@ namespace lake {
             if (this != &other) {
                 mID = other.mID;
                 mSize = other.mSize;
+                mFormat = other.mFormat;
+                mFilterMode = other.mFilterMode;
 
                 other.mID = GL_NONE;
             }
@@ -57,7 +75,10 @@ namespace lake {
 
         void bind(const u32 slot) const;
 
-        [[nodiscard]] const glm::vec2& getSize() const { return mSize; }
+        [[nodiscard]] u32 getID() const { return mID; }
+        [[nodiscard]] glm::vec2 getSize() const { return mSize; }
+        [[nodiscard]] const Format& getFormat() const { return mFormat; }
+        [[nodiscard]] const FilterMode& getFilterMode() const { return mFilterMode; }
 
         static void clearCache();
 
@@ -66,6 +87,8 @@ namespace lake {
 
         u32 mID;
         glm::u32vec2 mSize;
+        Format mFormat;
+        FilterMode mFilterMode;
     };
 
 } // namespace lake

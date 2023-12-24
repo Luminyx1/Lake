@@ -5,6 +5,7 @@
 #include "Lake/ShaderProgram.h"
 #include "Lake/Event.h"
 #include "Lake/Application.h"
+#include "Lake/PrimitiveShape.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -14,7 +15,7 @@ lake::Graphics::Graphics(const lake::Graphics::Properties& properties)
     : mTimeStep(0.0f)
     , mFrameTime(0.0f)
     , mLastFrameTime(0.0f)
-    , mLayerStack()
+    , mLayerStack(nullptr)
 {
     bool success = glfwInit();
     LK_ASSERT(success, "Failed to initialize GLFW");
@@ -72,10 +73,10 @@ lake::Graphics::Graphics(const lake::Graphics::Properties& properties)
 #ifndef LK_DIST
     static const auto debugCallback = [](GLenum, GLenum, GLuint, GLenum severity, GLsizei, const GLchar* message, const void*) {
         switch (severity) {
-            case GL_DEBUG_SEVERITY_HIGH:            return lake::error(std::string{"GLFW"} + message);
-            case GL_DEBUG_SEVERITY_MEDIUM:          return lake::warn(std::string{"GLFW"} + message);
-            case GL_DEBUG_SEVERITY_LOW:             return lake::info(std::string{"GLFW"} + message);
-            case GL_DEBUG_SEVERITY_NOTIFICATION:    return lake::trace(std::string{"GLFW"} + message);
+            case GL_DEBUG_SEVERITY_HIGH:            return lake::error(std::string{"OpenGL: "} + message);
+            case GL_DEBUG_SEVERITY_MEDIUM:          return lake::warn(std::string{"OpenGL: "} + message);
+            case GL_DEBUG_SEVERITY_LOW:             return lake::info(std::string{"OpenGL: "} + message);
+            case GL_DEBUG_SEVERITY_NOTIFICATION:    return lake::trace(std::string{"OpenGL: "} + message);
         }
     };
 
@@ -84,13 +85,17 @@ lake::Graphics::Graphics(const lake::Graphics::Properties& properties)
     glDebugMessageCallback(debugCallback, nullptr);
 #endif
 
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
+    PrimitiveShape::init();
+
+    mLayerStack = new LayerStack({ properties.window.width, properties.window.height });
 }
 
 lake::Graphics::~Graphics() {
     Texture::clearCache();
     ShaderProgram::clearCache();
+
+    delete mLayerStack;
+    mLayerStack = nullptr;
 
     glfwDestroyWindow(glfwGetCurrentContext());
     glfwTerminate();
@@ -111,7 +116,7 @@ bool lake::Graphics::update() {
     glClearDepth(1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    mLayerStack.drawLayers();
+    mLayerStack->drawLayers();
 
     return !glfwWindowShouldClose(window);
 }
@@ -120,13 +125,12 @@ void lake::Graphics::onEvent(Event* event) {
     if (event->getType() == lake::EventType::WindowResize) {
         const auto resizeEvent = static_cast<lake::WindowResizeEvent*>(event);
 
-        glViewport(0, 0, resizeEvent->getSize().x, resizeEvent->getSize().y);
-        mLayerStack.resizeLayers(resizeEvent->getSize());
+        mLayerStack->resize(resizeEvent->getSize());
     }
 }
 
 void lake::Graphics::pushDrawable(DrawableComponent* drawable, const std::size_t layerHash) {
-    mLayerStack.pushDrawable(drawable, layerHash);
+    mLayerStack->pushDrawable(drawable, layerHash);
 }
 
 glm::u32vec2 lake::Graphics::getFramebufferSize() {

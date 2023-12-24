@@ -1,0 +1,66 @@
+#pragma once
+
+#include "Lake/Common.h"
+
+#include "Lake/Texture.h"
+
+#include <glad/glad.h>
+
+namespace lake {
+
+    class Framebuffer final {
+        LK_NO_COPY_OR_MOVE(Framebuffer);
+
+    public:
+        enum class BindMode {
+            Draw,
+            Read,
+            Write,
+
+            Count
+        };
+
+        enum class Type {
+            Depth = 1 << 0,
+            Color = 1 << 1,
+            All = Depth | Color,
+        };
+
+        friend u32 operator&(const lake::Framebuffer::Type lhs, const lake::Framebuffer::Type rhs) {
+            return static_cast<u32>(lhs) & static_cast<u32>(rhs);
+        }
+
+    private:
+        Framebuffer();
+
+    public:
+        Framebuffer(const glm::u32vec2& size);
+        ~Framebuffer();
+
+        void bind(const BindMode mode = BindMode::Draw) const;
+        void clear(const glm::f32vec4& value, const Type type, u32 drawBuffer = 0) const;
+        void clear(const glm::u32vec4& value, const Type type, u32 drawBuffer = 0) const;
+        void resize(const glm::u32vec2& size);
+
+        static [[nodiscard]] const Framebuffer* getBackbuffer();
+        // TODO: Blit as a member function?
+        static void blit(const Framebuffer& src, const Framebuffer& dst, const glm::u32vec2& srcStart, const glm::u32vec2& srcEnd, const glm::u32vec2& dstStart, const glm::u32vec2& dstEnd, const u32 typeMask, const Texture::FilterMode filterMode = Texture::FilterMode::Linear);
+
+        void addTextureBuffer(const Texture::Format fmt, const Texture::FilterMode enlargeFilter = Texture::FilterMode::Linear, const Texture::FilterMode shrinkFilter = Texture::FilterMode::Linear);
+        //void addRenderBuffer(); //TODO
+        void finalize() const;
+
+        [[nodiscard]] const u32 getID() const { return mID; }
+        [[nodiscard]] const Texture* getTextureBuffer(const std::size_t index) const { return mTextureBuffers[index]; }
+        [[nodiscard]] const glm::u32vec2& getSize() const { return mSize; }
+        [[nodiscard]] const Texture* getDepthStencil() const { return mDepthStencil; }
+
+    private:
+        u32 mID;
+        glm::u32vec2 mSize;
+        std::vector<Texture*> mTextureBuffers;
+        Texture* mDepthStencil;
+        bool mFinalized;
+    };
+
+}

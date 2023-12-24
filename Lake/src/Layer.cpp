@@ -1,25 +1,42 @@
 #include "Lake/Layer.h"
 
 #include "Lake/Log.h"
+#include "Lake/PrimitiveShape.h"
 
 lake::Layer::Layer(const std::string& name)
     : mDrawables()
     , mName(name)
-{ }
+    , mCamera(nullptr)
+    , mGraphicsContext()
+{
+    mGraphicsContext
+        .depth(GraphicsContext::DepthFunction::LessEqual, true)
+    ;
+}
 
 void lake::Layer::draw(const lake::RenderInfo& renderInfo) {
+    mGraphicsContext.apply();
+
     for (auto& drawable : mDrawables) {
         drawable->draw(renderInfo);
     }
 }
 
-void lake::Layer::resize(const glm::u32vec2& size) {
-
-}
-
-lake::LayerStack::LayerStack()
+lake::LayerStack::LayerStack(const glm::u32vec2& size)
     : mLayers()
-{ }
+    , mFramebuffer(size)
+    , mCompositorShader("lake/assets/shaders/compositor.vsh", "lake/assets/shaders/compositor.fsh")
+    , mGraphicsContext()
+{
+    mFramebuffer.addTextureBuffer(Texture::Format::RGBA16F); //? Is this the right format?
+    mFramebuffer.finalize();
+
+    mGraphicsContext
+        .blend(false)
+        .cull(false)
+        .depth(false)
+    ;
+}
 
 lake::LayerStack::~LayerStack() {
     this->clearLayers();
@@ -63,7 +80,9 @@ lake::Layer* lake::LayerStack::getLayer(const std::size_t hash) {
     return nullptr;
 }
 
-void lake::LayerStack::resizeLayers(const glm::u32vec2& size) {
+void lake::LayerStack::resize(const glm::u32vec2& size) {
+    glViewport(0, 0, size.x, size.y);
+
     for (auto& [hash, layer] : mLayers) {
         layer->resize(size);
     }
@@ -80,14 +99,34 @@ void lake::LayerStack::pushDrawable(DrawableComponent* drawable, const std::size
 }
 
 void lake::LayerStack::drawLayers() const {
+    Framebuffer::getBackbuffer()->clear(glm::f32vec4{ 0.0f }, Framebuffer::Type::Color);
+    Framebuffer::getBackbuffer()->clear(glm::f32vec4{ 1.0f }, Framebuffer::Type::Depth);
+
+    mFramebuffer.bind();
+    mFramebuffer.clear(glm::f32vec4{ 0.0f }, Framebuffer::Type::Color);
+    mFramebuffer.clear(glm::f32vec4{ 1.0f }, Framebuffer::Type::Depth);
+
     for (const auto& [hash, layer] : mLayers) {
         const RenderInfo renderInfo = {
-            .camera = layer->getCamera()
+            .camera = layer->getCamera(),
+            .framebuffer = &mFramebuffer,
         };
 
         layer->draw(renderInfo);
         layer->mDrawables.clear();
     }
+
+    mGraphicsContext.apply();
+
+    Framebuffer::getBackbuffer()->bind();
+
+    glBindVertexArray(PrimitiveShape::getQuadVAO());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, PrimitiveShape::getQuadEBO());
+
+    mCompositorShader.bind();
+    mFramebuffer.getTextureBuffer(0)->bind(0);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 lake::LayerStack::LayerContainer::iterator lake::LayerStack::getLayerIterator(const std::size_t hash) {

@@ -1,0 +1,56 @@
+#include "Lake/GraphicsContext.h"
+
+lake::GraphicsContext::GraphicsContext()
+    : mDepthTest(true)
+    , mDepthWrite(true)
+    , mDepthFunction(DepthFunction::Less)
+    , mCullEnabled(false)
+    , mCullFace(CullFace::Back)
+    , mCullDirection(CullDirection::CounterClockwise)
+    , mBlendEnabled(false)
+    , mSrcRGB(BlendFactor::SrcAlpha)
+    , mSrcA(BlendFactor::SrcAlpha)
+    , mDstRGB(BlendFactor::OneMinusSrcAlpha)
+    , mDstA(BlendFactor::OneMinusSrcAlpha)
+    , mBlendEquation(BlendEquation::Add)
+{ }
+
+/*
+        (this->depthTest ? glEnable : glDisable)(GL_DEPTH_TEST);
+        if (this->depthTest) {
+            glDepthFunc(dfToGLEnum(this->depthFunction));
+            glDepthMask(this->depthWrite);
+        }
+
+        (this->cullEnabled ? glEnable : glDisable)(GL_CULL_FACE);
+        if (this->cullEnabled) {
+            glCullFace(cfToGLEnum(this->cullFace));
+            glFrontFace(cdToGLEnum(this->cullDirection));
+        }
+
+        (this->blendEnabled ? glEnable : glDisable)(GL_BLEND);
+        if (this->blendEnabled) {
+            glBlendFuncSeparate(bfToGLEnum(this->srcRGB), bfToGLEnum(this->dstRGB), bfToGLEnum(this->srcA), bfToGLEnum(this->dstA));
+            glBlendEquation(beToGLEnum(this->blendEquation));
+        }
+*/
+
+void lake::GraphicsContext::apply() const {
+    (mDepthTest ? glEnable : glDisable)(GL_DEPTH_TEST);
+    if (mDepthTest) {
+        glDepthFunc(static_cast<GLenum>(mDepthFunction));
+        glDepthMask(mDepthWrite);
+    }
+
+    (mCullEnabled ? glEnable : glDisable)(GL_CULL_FACE);
+    if (mCullEnabled) {
+        glCullFace(static_cast<GLenum>(mCullFace));
+        glFrontFace(static_cast<GLenum>(mCullDirection));
+    }
+
+    (mBlendEnabled ? glEnable : glDisable)(GL_BLEND);
+    if (mBlendEnabled) {
+        glBlendFuncSeparate(static_cast<GLenum>(mSrcRGB), static_cast<GLenum>(mDstRGB), static_cast<GLenum>(mSrcA), static_cast<GLenum>(mDstA));
+        glBlendEquation(static_cast<GLenum>(mBlendEquation));
+    }
+}

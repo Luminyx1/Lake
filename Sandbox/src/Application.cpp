@@ -5,6 +5,8 @@
 
 #include <imgui.h>
 
+#include "CustomRenderLayer.h"
+
 class SandboxApp final : public lake::Application {
 public:
     SandboxApp(const lake::Application::Properties& properties)
@@ -13,7 +15,7 @@ public:
         //* Initialize the environment for our application. This is called before the application loop starts.
 
         // Push layers to the layer stack. The order of layers is important, as they are called in order from top to bottom.
-        mGraphics.getLayerStack().pushLayer<lake::Layer>("main"); // Render the main scene.
+        mGraphics.getLayerStack().pushLayer<CustomRenderLayer>("main"); // Render the main scene. We use a custom layer here to render our scene on a white background instead of the default black.
         mGraphics.getLayerStack().pushLayer<lake::ImGuiLayer>("ImGui"); // Render ImGui overlay.
 
         // Additional setup such as setting the ImGui style.

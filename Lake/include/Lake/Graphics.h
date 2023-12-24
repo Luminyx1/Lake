@@ -27,13 +27,13 @@ namespace lake {
         void pushDrawable(DrawableComponent* drawable, const std::size_t layerHash);
 
         [[nodiscard]] f32 getTimeStep() const { return mTimeStep; }
-        [[nodiscard]] LayerStack& getLayerStack() { return mLayerStack; }
+        [[nodiscard]] LayerStack& getLayerStack() { return *mLayerStack; }
 
         static glm::u32vec2 getFramebufferSize();
 
     private:
         f32 mTimeStep, mFrameTime, mLastFrameTime;
-        LayerStack mLayerStack;
+        LayerStack* mLayerStack;
     };
 
 

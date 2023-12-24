@@ -11,6 +11,8 @@
 namespace lake {
 
     class ShaderProgram final {
+        LK_NO_COPY(ShaderProgram);
+
     private:
         class Shader {
         public:
@@ -28,9 +30,6 @@ namespace lake {
     public:
         ShaderProgram(const std::string& vshPath, const std::string& fshPath);
         ~ShaderProgram();
-
-        ShaderProgram(const ShaderProgram&) = delete;
-        ShaderProgram& operator=(const ShaderProgram&) = delete;
 
         ShaderProgram(ShaderProgram&& other) noexcept
             : mID(other.mID)
@@ -82,8 +81,6 @@ namespace lake {
 
     private:
         i32 getLocation(const std::string& name) const;
-
-        static std::unordered_map<std::string, std::pair<u32, u32>> sProgramCache;
 
         u32 mID;
         std::unordered_map<std::string, i32> mUniformLocations;

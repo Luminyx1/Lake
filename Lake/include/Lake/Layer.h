@@ -4,6 +4,9 @@
 
 #include "Lake/DrawableComponent.h"
 #include "Lake/CameraComponent.h"
+#include "Lake/Framebuffer.h"
+#include "Lake/ShaderProgram.h"
+#include "Lake/GraphicsContext.h"
 
 #include "glm/glm.hpp"
 
@@ -18,7 +21,7 @@ namespace lake {
         virtual ~Layer() = default;
 
         virtual void draw(const RenderInfo& renderInfo);
-        virtual void resize(const glm::u32vec2& size);
+        virtual void resize(const glm::u32vec2& size) { }
 
         void setCamera(CameraComponent* camera) { mCamera = camera; }
         [[nodiscard]] CameraComponent* getCamera() const { return mCamera; }
@@ -29,11 +32,12 @@ namespace lake {
         std::vector<DrawableComponent*> mDrawables;
         const std::string mName;
         CameraComponent* mCamera;
+        GraphicsContext mGraphicsContext;
     };
 
     class LayerStack {
     public:
-        LayerStack();
+        LayerStack(const glm::u32vec2 &size);
         ~LayerStack();
 
         template<typename T>
@@ -52,13 +56,11 @@ namespace lake {
         [[nodiscard]] Layer* getLayer(const std::string& name) { return this->getLayer(std::hash<std::string>{}(name)); }
 
         template <typename T>
-        T* getLayer(const std::string& name) {
-            static_assert(std::is_base_of<Layer, T>::value, "T must derive from Layer");
-        
+        T* getLayer(const std::string& name) requires std::is_base_of_v<Layer, T> {
             return static_cast<T*>(this->getLayer(name));
         }
 
-        void resizeLayers(const glm::u32vec2& size);
+        void resize(const glm::u32vec2& size);
 
         void pushDrawable(DrawableComponent* drawable, const std::size_t layerHash);
 
@@ -70,6 +72,9 @@ namespace lake {
         LayerContainer::iterator getLayerIterator(const std::size_t hash);
 
         LayerContainer mLayers;
+        Framebuffer mFramebuffer;
+        ShaderProgram mCompositorShader;
+        GraphicsContext mGraphicsContext;
     };
 
 } // namespace lake
