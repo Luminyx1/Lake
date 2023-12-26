@@ -9,8 +9,8 @@ class ChromaticAberrationComponent : public lake::DrawableComponent {
 public:
     ChromaticAberrationComponent(const std::string& layerName);
 
+    void onEvent(lake::Event* event) override;
     void draw(const lake::RenderInfo& renderInfo) override;
-    void resize(const glm::u32vec2& size);
 
 private:
     lake::Framebuffer mWorkBuffer;

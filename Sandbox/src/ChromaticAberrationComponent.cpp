@@ -13,6 +13,14 @@ ChromaticAberrationComponent::ChromaticAberrationComponent(const std::string& la
     mWorkBuffer.finalize();
 }
 
+void ChromaticAberrationComponent::onEvent(lake::Event* event) {    
+    if (event->getType() == lake::EventType::WindowResize) {
+        lake::WindowResizeEvent* e = static_cast<lake::WindowResizeEvent*>(event);
+
+        mWorkBuffer.resize(e->getSize());
+    }
+}
+
 void ChromaticAberrationComponent::draw(const lake::RenderInfo& renderInfo) {
     mShaderProgram.bind();
     mWorkBuffer.bind();
@@ -27,8 +35,4 @@ void ChromaticAberrationComponent::draw(const lake::RenderInfo& renderInfo) {
 
     // Remember to re-bind the framebuffer after we are done.
     renderInfo.framebuffer->bind();
-}
-
-void ChromaticAberrationComponent::resize(const glm::u32vec2& size) {
-    mWorkBuffer.resize(size);
 }

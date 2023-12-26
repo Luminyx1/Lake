@@ -25,6 +25,12 @@ void lake::Scene::update(const f32 timeStep) {
 void lake::Scene::onEvent(lake::Event* event) {
     for (auto entity : mEntities) {
         entity->onEvent(event);
+
+        for (auto& [hash, componentVector] : entity->mComponents) {
+            for (lake::EntityComponent* component : componentVector) {
+                component->onEvent(event);
+            }
+        }
     }
 }
 

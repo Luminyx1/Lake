@@ -21,6 +21,8 @@ namespace lake {
     public:
         EntityComponent() = default;
         virtual ~EntityComponent() noexcept(false) = default;
+
+        virtual void onEvent(Event* event) { }
     };
 
     class Entity {

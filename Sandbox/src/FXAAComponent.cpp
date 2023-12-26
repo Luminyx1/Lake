@@ -13,6 +13,14 @@ FXAAComponent::FXAAComponent(const std::string& layerName)
     mWorkBuffer.finalize();
 }
 
+void FXAAComponent::onEvent(lake::Event* event) {    
+    if (event->getType() == lake::EventType::WindowResize) {
+        lake::WindowResizeEvent* e = static_cast<lake::WindowResizeEvent*>(event);
+
+        mWorkBuffer.resize(e->getSize());
+    }
+}
+
 void FXAAComponent::draw(const lake::RenderInfo& renderInfo) {
     mShaderProgram.bind();
     mShaderProgram.setVec2(0, {
@@ -32,8 +40,4 @@ void FXAAComponent::draw(const lake::RenderInfo& renderInfo) {
 
     // Remember to re-bind the framebuffer after we are done.
     renderInfo.framebuffer->bind();
-}
-
-void FXAAComponent::resize(const glm::u32vec2& size) {
-    mWorkBuffer.resize(size);
 }
