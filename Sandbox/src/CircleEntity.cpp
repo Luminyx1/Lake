@@ -68,9 +68,9 @@ public:
 
             // Play a sound effect when we rotate.
             lake::SoundComponent* sound = this->getComponents<lake::SoundComponent>()[0];
-            sound->setPitch(1.0f + (mRotation / 360.0f));
-            sound->setVolume(0.1f);
-            sound->play();
+            if (!sound->isPlaying()) {
+                sound->play();
+            }
         }
 
         // Get the camera entity and unproject the mouse position to world coordinates.

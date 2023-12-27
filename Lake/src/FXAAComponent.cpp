@@ -1,19 +1,19 @@
-#include "ChromaticAberrationComponent.h"
+#include "Lake/FXAAComponent.h"
 
 #include "Lake/PrimitiveShape.h"
 #include "Lake/Graphics.h"
 
-ChromaticAberrationComponent::ChromaticAberrationComponent(const std::string& layerName)
+lake::FXAAComponent::FXAAComponent(const std::string& layerName)
     : DrawableComponent()
     , mWorkBuffer(lake::Graphics::getFramebufferSize())
-    , mShaderProgram("lake/assets/shaders/compositor.vsh", "chromatic_aberration.fsh")
+    , mShaderProgram("lake/assets/shaders/compositor.vsh", "lake/assets/shaders/fxaa.fsh")
 {
     this->setTargetLayer(layerName);
     mWorkBuffer.addTextureBuffer(lake::Texture::Format::RGBA16F);
     mWorkBuffer.finalize();
 }
 
-void ChromaticAberrationComponent::onEvent(lake::Event* event) {    
+void lake::FXAAComponent::onEvent(lake::Event* event) {    
     if (event->getType() == lake::EventType::WindowResize) {
         lake::WindowResizeEvent* e = static_cast<lake::WindowResizeEvent*>(event);
 
@@ -21,8 +21,13 @@ void ChromaticAberrationComponent::onEvent(lake::Event* event) {
     }
 }
 
-void ChromaticAberrationComponent::draw(const lake::RenderInfo& renderInfo) {
+void lake::FXAAComponent::draw(const lake::RenderInfo& renderInfo) {
     mShaderProgram.bind();
+    mShaderProgram.setVec2(0, {
+        1.0f / static_cast<f32>(mWorkBuffer.getSize().x),
+        1.0f / static_cast<f32>(mWorkBuffer.getSize().y)
+    });
+
     mWorkBuffer.bind();
     renderInfo.framebuffer->getTextureBuffer(0)->bind(0);
     
