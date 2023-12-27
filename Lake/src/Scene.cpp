@@ -25,8 +25,6 @@ void lake::Scene::update(const f32 timeStep) {
 void lake::Scene::onEvent(lake::Event* event) {
     for (auto entity : mEntities) {
         entity->onEvent(event);
-        
-        //! TODO: This crashes the application when switching scenes
 
         for (auto [hash, componentVector] : entity->mComponents) {
             for (lake::EntityComponent* component : componentVector) {
