@@ -63,7 +63,7 @@ public:
 
         // Rotate if we are intersecting the mouse or colliding with another entity.
         if (mRotateNextFrame || mMousedown != 0) {
-            mRotation += timeStep * 1800.0f * (mMousedown != 0) ? mMousedown : 1;
+            mRotation += timeStep * (mMousedown != 0) ? mMousedown : 1;
             mRotateNextFrame = false;
 
             // Play a sound effect when we rotate.

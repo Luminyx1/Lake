@@ -25,25 +25,31 @@ void lake::Scene::update(const f32 timeStep) {
 void lake::Scene::onEvent(lake::Event* event) {
     for (auto entity : mEntities) {
         entity->onEvent(event);
+        
+        //! TODO: This crashes the application when switching scenes
 
-        for (auto& [hash, componentVector] : entity->mComponents) {
+        for (auto [hash, componentVector] : entity->mComponents) {
             for (lake::EntityComponent* component : componentVector) {
                 component->onEvent(event);
             }
         }
     }
+
+    if (event->getType() == lake::EventType::SceneSwitch) {
+        lake::SceneSwitchEvent* sceneSwitchEvent = static_cast<lake::SceneSwitchEvent*>(event);
+
+        for (auto& entity : mEntities) {
+            delete entity;
+        }
+
+        mEntities.clear();
+
+        this->loadScene(sceneSwitchEvent->getPath());
+    }
 }
 
 void lake::Scene::switchScene(const std::string& path) {
     Application::raiseEvent(new SceneSwitchEvent(path));
-
-    for (auto& entity : mEntities) {
-        delete entity;
-    }
-
-    mEntities.clear();
-
-    this->loadScene(path);
 }
 
 void lake::Scene::loadScene(const std::string& path) {

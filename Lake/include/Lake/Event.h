@@ -186,17 +186,17 @@ namespace lake {
 
     class SceneSwitchEvent : public Event {
     public:
-        SceneSwitchEvent(const std::string& sceneName)
+        SceneSwitchEvent(const std::string& path)
             : Event(EventType::SceneSwitch)
-            , mSceneName(sceneName)
+            , mPath(path)
         { }
 
         ~SceneSwitchEvent() override = default;
 
-        [[nodiscard]] const std::string& getSceneName() const { return mSceneName; }
+        [[nodiscard]] const std::string& getPath() const { return mPath; }
 
     private:
-        std::string mSceneName;
+        std::string mPath;
     };
 
 } // namespace lake
