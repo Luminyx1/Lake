@@ -1,5 +1,7 @@
 #include "Lake/Entity.h"
 
+#include "Lake/TagComponent.h"
+
 lake::Entity::Registry::Registry(const lake::Entity::Registry::entityFactory factory, const std::string& identifier) 
     : factory(factory)
     , identifier(identifier)
@@ -22,4 +24,16 @@ lake::Entity::~Entity() {
     }
 
     mComponents.clear();
+}
+
+bool lake::Entity::hasTag(const std::string& tag) {
+    std::span<TagComponent*> tagComponents = this->getComponents<TagComponent>();
+
+    for (auto component : tagComponents) {
+        if (component->getTag() == tag) {
+            return true;
+        }
+    }
+
+    return false;
 }

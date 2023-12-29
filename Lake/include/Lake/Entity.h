@@ -55,9 +55,6 @@ namespace lake {
         Entity() = default;
         virtual ~Entity();
 
-        virtual void onUpdate(const f32 timeStep) { }
-        virtual void onEvent(Event* event) { }
-
         template <typename T>
         void addComponent(T* component) requires std::is_base_of_v<EntityComponent, T> {
             mComponents[std::type_index(typeid(T))].push_back(component);
@@ -78,14 +75,22 @@ namespace lake {
         [[nodiscard]] const std::string& getIdentifier() const { return mRegistry->identifier; }
         [[nodiscard]] std::size_t getIdentifierHash() const { return mRegistry->identifierHash; }
 
+        bool hasTag(const std::string& tag);
+        void setAlive(const bool isAlive) { mIsAlive = isAlive; }
+
     protected:
         Scene* mScene = nullptr;
 
     private:
         friend class Scene;
 
+        virtual void onCreate() { }
+        virtual void onUpdate(const f32 timeStep) { }
+        virtual void onEvent(Event* event) { }
+
         std::map<std::type_index, std::vector<EntityComponent*>> mComponents;
         const Registry* mRegistry = nullptr;
+        bool mIsAlive = true;
     };
 
 } // namespace lake

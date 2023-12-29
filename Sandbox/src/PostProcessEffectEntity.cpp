@@ -2,6 +2,7 @@
 
 #include "Lake/ChromaticAberrationComponent.h"
 #include "Lake/FXAAComponent.h"
+#include "BackgroundRendererComponent.h"
 
 class PostProcessEffectEntity final : public lake::Entity {
     LK_REGISTER_ENTITY(PostProcessEffectEntity);
@@ -9,15 +10,18 @@ class PostProcessEffectEntity final : public lake::Entity {
 public:
     PostProcessEffectEntity(lake::Entity::Properties properties)
         : Entity()
-    {
-        //* Add components to build our entity. Then, control the entity in onUpdate.
+    { }
 
-        // Add a ChromaticAberrationComponent to apply a post-process effect.
+    ~PostProcessEffectEntity() override = default;
+
+    void onCreate() override {
+        this->addComponent<lake::DrawableComponent>(new BackgroundRendererComponent("background"));
         this->addComponent<lake::DrawableComponent>(new lake::ChromaticAberrationComponent("pfx_chroma"));
-
-        // Add an FXAAComponent to apply a post-process effect.
         this->addComponent<lake::DrawableComponent>(new lake::FXAAComponent("pfx_fxaa"));
     }
 
-    ~PostProcessEffectEntity() override = default;
+    void onUpdate(f32 timeStep) override {
+        BackgroundRendererComponent* bgRenderer = static_cast<BackgroundRendererComponent*>(this->getComponents<lake::DrawableComponent>()[0]);
+        bgRenderer->update(timeStep);
+    }
 };

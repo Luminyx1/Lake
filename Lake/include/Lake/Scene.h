@@ -6,6 +6,7 @@
 #include "Lake/Event.h"
 
 #include <string>
+#include <string_view>
 
 namespace lake {
 
@@ -18,12 +19,14 @@ namespace lake {
         void onEvent(Event* event);
 
         void switchScene(const std::string& path);
+        Entity* spawnEntity(const std::string_view type, const std::string& propertiesJson);
 
         const std::vector<Entity*>& getEntities() const { return mEntities; }
 
         [[nodiscard]] const std::string& getPath() const { return mPath; }
 
     private:
+        Entity* spawnEntity(const std::string_view type, Entity::Properties& properties);
         void loadScene(const std::string& path);
 
         std::vector<Entity*> mEntities;

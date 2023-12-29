@@ -12,7 +12,11 @@ public:
         : Entity()
         , mPosition(lake::json::getVec3(properties, "position"))
         , mLookTarget(0.0f, 0.0f, 1.0f)
-    {
+    { }
+
+    ~MainCamera() override = default;
+
+    void onCreate() override {
         //* Add components to build our entity. Then, control the entity in onUpdate.
 
         // Add an orthographic camera component to render the scene with.
@@ -26,8 +30,6 @@ public:
         camera->setTargetLayer("main"); // Assign the camera to the "main" layer.
         this->addComponent<lake::CameraComponent>(camera);
     }
-
-    ~MainCamera() override = default;
 
     void onUpdate(const f32 timeStep) override {
         //* Act behaviour for our entity. This is called every frame.

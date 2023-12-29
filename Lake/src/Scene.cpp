@@ -17,8 +17,12 @@ lake::Scene::~Scene() {
 }
 
 void lake::Scene::update(const f32 timeStep) {
-    for (auto entity : mEntities) {
-        entity->onUpdate(timeStep);
+    std::erase_if(mEntities, [](lake::Entity* entity) {
+        return !entity->mIsAlive;
+    });
+
+    for (int i = 0; i < mEntities.size(); ++i) {
+        mEntities[i]->onUpdate(timeStep);
     }
 }
 
@@ -50,6 +54,45 @@ void lake::Scene::switchScene(const std::string& path) {
     Application::raiseEvent(new SceneSwitchEvent(path));
 }
 
+lake::Entity* lake::Scene::spawnEntity(const std::string_view type, const std::string& propertiesJson) {
+    simdjson::ondemand::parser parser;
+    simdjson::padded_string padded_string = propertiesJson;
+    simdjson::ondemand::document doc = parser.iterate(padded_string);
+    auto r = doc.get_object();
+    LK_ASSERT(r.error() == simdjson::SUCCESS, "Failed to create properties from string");
+
+    return this->spawnEntity(type, r);
+}
+
+lake::Entity* lake::Scene::spawnEntity(const std::string_view type, lake::Entity::Properties& properties) {
+    const auto& registry = Entity::Registry::getRegistry();
+    const auto entityRegistration = registry.find(std::string{type});
+    if (entityRegistration == registry.end()) {
+        lake::error("Entity '", type, "' not found in registry");
+        return nullptr;
+    }
+
+    const auto& [name, data] = *entityRegistration;
+
+    Entity* newEntity = data.factory(properties);
+
+    newEntity->mRegistry = &data;
+    newEntity->mScene = this;
+    auto tags = properties["tags"].get_array();
+    if (tags.error() == simdjson::NO_SUCH_FIELD) {
+        newEntity->onCreate();
+        mEntities.push_back(newEntity);
+        return newEntity;
+    }
+    for (auto tag : tags) {
+        newEntity->addComponent<lake::TagComponent>(new lake::TagComponent(std::string{tag.get_string().value()}));
+    }
+
+    newEntity->onCreate();
+    mEntities.push_back(newEntity);
+    return newEntity;
+}
+
 void lake::Scene::loadScene(const std::string& path) {
     /**
      * TODO: Preload assets while running the current scene before switching to the new scene to avoid stuttering (including audio)
@@ -67,31 +110,10 @@ void lake::Scene::loadScene(const std::string& path) {
 
         for (auto entity : entities) {
             auto entityObject = entity.value().get_object();
-
             const std::string_view type = entityObject["type"].get_string().value();
-            const lake::Entity::Properties properties = entityObject["properties"].get_object();
+            lake::Entity::Properties properties = entityObject["properties"].get_object();
 
-            const auto& registry = Entity::Registry::getRegistry();
-            const auto entityRegistration = registry.find(std::string{type});
-            if (entityRegistration == registry.end()) {
-                lake::error("Entity '", type, "' not found in registry");
-                continue;
-            }
-
-            const auto& [name, data] = *entityRegistration;
-
-            Entity* newEntity = data.factory(properties);
-
-            newEntity->mRegistry = &data;
-            newEntity->mScene = this;
-            auto tags = entityObject["properties"]["tags"];
-            if (tags.error() != simdjson::error_code::NO_SUCH_FIELD) { //? Should we set these here or in the constructor?
-                for (auto tag : tags.get_array()) {
-                    newEntity->addComponent<lake::TagComponent>(new lake::TagComponent(std::string{tag.get_string().value()}));
-                }
-            }
-
-            mEntities.push_back(newEntity);
+            this->spawnEntity(type, properties);
         }
     } catch (simdjson::simdjson_error& error) {
         lake::error("Error parsing scene file '", path, "': ", error.what());

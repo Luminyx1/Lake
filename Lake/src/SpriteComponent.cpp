@@ -10,6 +10,12 @@ lake::SpriteComponent::SpriteComponent(const std::string& texturePath, const Tex
     , mShaderProgram("lake/assets/shaders/sprite.vsh", "lake/assets/shaders/sprite.fsh")
 { }
 
+lake::SpriteComponent::SpriteComponent(const std::string& texturePath, const std::string& targetLayer, const Texture::FilterMode filterMode)
+    : SpriteComponent(texturePath, filterMode)
+{
+    this->setTargetLayer(targetLayer);
+}
+
 lake::SpriteComponent::~SpriteComponent() = default;
 
 void lake::SpriteComponent::draw(const RenderInfo& renderInfo) {

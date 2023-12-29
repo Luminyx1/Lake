@@ -11,6 +11,7 @@ namespace lake {
     class SpriteComponent : public DrawableComponent {
     public:
         SpriteComponent(const std::string& texturePath, const Texture::FilterMode filterMode = Texture::FilterMode::Linear);
+        SpriteComponent(const std::string& texturePath, const std::string& targetLayer, const Texture::FilterMode filterMode = Texture::FilterMode::Linear);
         ~SpriteComponent() override;
 
         void draw(const RenderInfo& renderInfo) override;
@@ -25,7 +26,6 @@ namespace lake {
         glm::mat4 mMatrix;
         Texture mTexture;
         ShaderProgram mShaderProgram;
-        
     };
 
 } // namespace lake

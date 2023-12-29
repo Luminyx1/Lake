@@ -29,7 +29,7 @@ namespace lake {
         Application(const Properties& properties);
         virtual ~Application();
         
-        virtual void onUpdate(const f32 timeStep) = 0;
+        virtual void onUpdate(const f32 timeStep) { }
         virtual void onEvent(Event* event) { }
 
         static void raiseEvent(Event* event);

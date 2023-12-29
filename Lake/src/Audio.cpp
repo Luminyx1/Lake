@@ -150,7 +150,7 @@ void lake::Audio::update(std::span<SoundComponent*> soundComponents) {
 
             LK_ASSERT(sound != nullptr, "Failed to load sound: ", soundComponent->getPath());
 
-            lake::trace("Sound cache miss: ", soundComponent->getPath());
+            lake::trace("Loading sound: ", soundComponent->getPath());
             mSounds[std::make_pair(soundComponent->getPath(), soundComponent->getMode())] = sound;
 
             playSound(sound, soundComponent);
