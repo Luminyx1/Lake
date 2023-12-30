@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <fstream>
+#include <vector>
 
 std::unordered_map<std::string, std::string> lake::ShaderProgram::Shader::sSourceCache;
 
