@@ -17,9 +17,22 @@ lake::Scene::~Scene() {
 }
 
 void lake::Scene::update(const f32 timeStep) {
+    std::vector<lake::Entity*> entitiesToDestroy;
+    for (auto& entity : mEntities) {
+        if (entity->mIsAlive) {
+            continue;
+        }
+
+        entitiesToDestroy.push_back(entity);
+    }
+
     std::erase_if(mEntities, [](lake::Entity* entity) {
         return !entity->mIsAlive;
     });
+
+    for (auto& entity : entitiesToDestroy) {
+        delete entity;
+    }
 
     for (int i = 0; i < mEntities.size(); ++i) {
         mEntities[i]->onUpdate(timeStep);
