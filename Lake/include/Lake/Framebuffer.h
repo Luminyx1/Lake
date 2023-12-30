@@ -5,6 +5,7 @@
 #include "Lake/Texture.h"
 
 #include <glad/glad.h>
+#include <vector>
 
 namespace lake {
 
