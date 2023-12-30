@@ -7,7 +7,7 @@
 
 namespace lake::json {
 
-    inline glm::vec2 getVec2(simdjson::simdjson_result<simdjson::haswell::ondemand::object>& object, const std::string_view key) {
+    inline glm::vec2 getVec2(simdjson::simdjson_result<simdjson::ondemand::object>& object, const std::string_view key) {
         auto array = object[key].get_array();
 
         auto it = array.begin();
@@ -18,7 +18,7 @@ namespace lake::json {
         return glm::vec2(x, y);
     }
 
-    inline glm::vec3 getVec3(simdjson::simdjson_result<simdjson::haswell::ondemand::object>& object, const std::string_view key) {
+    inline glm::vec3 getVec3(simdjson::simdjson_result<simdjson::ondemand::object>& object, const std::string_view key) {
         auto array = object[key].get_array();
 
         auto it = array.begin();
@@ -30,7 +30,7 @@ namespace lake::json {
         return glm::vec3(x, y, z);
     }
 
-    inline glm::vec4 getVec4(simdjson::simdjson_result<simdjson::haswell::ondemand::object>& object, const std::string_view key) {
+    inline glm::vec4 getVec4(simdjson::simdjson_result<simdjson::ondemand::object>& object, const std::string_view key) {
         auto array = object[key].get_array();
 
         auto it = array.begin();

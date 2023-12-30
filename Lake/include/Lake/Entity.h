@@ -27,7 +27,7 @@ namespace lake {
 
     class Entity {
     public:
-        using Properties = simdjson::simdjson_result<simdjson::haswell::ondemand::object>;
+        using Properties = simdjson::simdjson_result<simdjson::ondemand::object>;
 
         struct Registry {
             using entityFactory = Entity* (*)(Properties properties);

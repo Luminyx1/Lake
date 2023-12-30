@@ -4,6 +4,7 @@
 
 #include <array>
 #include <iostream>
+#include <ctime>
 
 namespace lake {
 
