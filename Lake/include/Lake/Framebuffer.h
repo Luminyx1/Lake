@@ -16,9 +16,7 @@ namespace lake {
         enum class BindMode {
             Draw,
             Read,
-            Write,
-
-            Count
+            Write
         };
 
         enum class Type {
