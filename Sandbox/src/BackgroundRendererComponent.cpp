@@ -7,6 +7,7 @@ BackgroundRendererComponent::BackgroundRendererComponent(const std::string& laye
     : DrawableComponent()
     , mWorkBuffer(lake::Graphics::getFramebufferSize())
     , mShaderProgram("lake/assets/shaders/compositor.vsh", "background.fsh")
+    , mTime(0.0f)
 {
     this->setTargetLayer(layerName);
     mWorkBuffer.addTextureBuffer(lake::Texture::Format::RGBA16F);
