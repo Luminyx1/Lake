@@ -81,7 +81,7 @@ lake::Audio::Audio()
         if (type & FMOD_SYSTEM_CALLBACK_OUTPUTUNDERRUN) {
             lake::trace("FMOD output underrun");
         }
-    #ifdef LK_COMPILER_CLANG
+    #ifndef LK_COMPILER_CLANG
         if (type & FMOD_SYSTEM_CALLBACK_RECORDPOSITIONCHANGED) {
             lake::trace("FMOD record position changed on sound to: ", reinterpret_cast<int>(commanddata2));
         }
