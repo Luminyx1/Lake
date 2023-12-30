@@ -4,6 +4,7 @@ project "Lake"
     cppdialect "C++20"
     staticruntime "off"
     vectorextensions "AVX2"
+    systemversion "latest"
 
     targetdir ("bin/%{prj.name}-%{cfg.buildcfg}/out")
     objdir ("bin/%{prj.name}-%{cfg.buildcfg}/int")
@@ -43,12 +44,19 @@ project "Lake"
     }
 
     filter "system:windows"
-        systemversion "latest"
         defines {
             "LK_PLATFORM_WINDOWS"
         }
         links {
             "fmodL_vc.lib"
+        }
+
+    filter "system:linux"
+        defines {
+            "LK_PLATFORM_LINUX"
+        }
+        links {
+            "libfmodL.so"
         }
     
     filter "configurations:Debug"
