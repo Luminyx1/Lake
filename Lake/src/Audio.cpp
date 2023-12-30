@@ -36,9 +36,11 @@ lake::Audio::Audio()
         if (type & FMOD_SYSTEM_CALLBACK_DEVICELISTCHANGED) {
             lake::trace("FMOD device list changed");
         }
+    #ifndef LK_COMPILER_CLANG
         if (type & FMOD_SYSTEM_CALLBACK_MEMORYALLOCATIONFAILED) {
             lake::error("FMOD memory allocation failed at ", (const char*)commanddata1, ", requested ", reinterpret_cast<int>(commanddata2), " bytes");
         }
+    #endif
         if (type & FMOD_SYSTEM_CALLBACK_THREADCREATED) {
             lake::trace("FMOD thread created \"", (const char*)commanddata2, "\"");
         }
@@ -79,9 +81,11 @@ lake::Audio::Audio()
         if (type & FMOD_SYSTEM_CALLBACK_OUTPUTUNDERRUN) {
             lake::trace("FMOD output underrun");
         }
+    #ifdef LK_COMPILER_CLANG
         if (type & FMOD_SYSTEM_CALLBACK_RECORDPOSITIONCHANGED) {
             lake::trace("FMOD record position changed on sound to: ", reinterpret_cast<int>(commanddata2));
         }
+    #endif
 
         return FMOD_OK;
     };
