@@ -79,7 +79,7 @@ void lake::Framebuffer::resize(const glm::u32vec2& size) {
         delete textureBuffer;
     }
 
-    mTextureBuffers = std::move(newTextureBuffers);
+    mTextureBuffers = newTextureBuffers;
 
     if (mDepthStencil != nullptr) {
         Texture* newDepthBuffer = new Texture(size, mDepthStencil->getFormat(), mDepthStencil->getFilterMode());

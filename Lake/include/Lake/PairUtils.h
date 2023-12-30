@@ -20,4 +20,4 @@ namespace lake {
         }
     };
 
-}
+} // namespace lake

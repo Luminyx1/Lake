@@ -48,9 +48,9 @@ namespace lake {
         std::string mPath;
         FMOD::Channel* mChannel;
         FMOD_MODE mMode;
+        f32 mPitch, mVolume;
         bool mWantsToPlay;
         bool mStreamed;
-        f32 mPitch, mVolume;
     };
 
-}
+} // namespace lake

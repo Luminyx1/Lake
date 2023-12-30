@@ -14,7 +14,7 @@ namespace lake {
         LK_NO_COPY(Texture);
 
     public:
-        enum class FilterMode {
+        enum class FilterMode : u16 {
             Nearest = GL_NEAREST,
             Linear = GL_LINEAR,
 
@@ -26,7 +26,7 @@ namespace lake {
             Count
         };
 
-        enum class Format {
+        enum class Format : u16 {
             RGB16F = GL_RGB16F,
             RGB32F = GL_RGB32F,
             R8 = GL_R8,
@@ -77,16 +77,16 @@ namespace lake {
 
         [[nodiscard]] u32 getID() const { return mID; }
         [[nodiscard]] glm::vec2 getSize() const { return mSize; }
-        [[nodiscard]] const Format& getFormat() const { return mFormat; }
-        [[nodiscard]] const FilterMode& getFilterMode() const { return mFilterMode; }
+        [[nodiscard]] Format getFormat() const { return mFormat; }
+        [[nodiscard]] FilterMode getFilterMode() const { return mFilterMode; }
 
         static void clearCache();
 
     private:
         static std::unordered_map<std::string, std::tuple<u8*, glm::u32vec2, u32>> cache;
 
-        u32 mID;
         glm::u32vec2 mSize;
+        u32 mID;
         Format mFormat;
         FilterMode mFilterMode;
     };

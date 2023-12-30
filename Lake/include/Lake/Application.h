@@ -49,5 +49,4 @@ namespace lake {
         Audio mAudio;
     };
 
-
 } // namespace lake

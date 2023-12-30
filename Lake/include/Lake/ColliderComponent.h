@@ -30,9 +30,9 @@ namespace lake {
         [[nodiscard]] Entity* getParent() const { return mParent; }
 
     protected:
+        Entity* mParent;
         glm::vec2 mPosition;
         std::function<void(ColliderComponent*, ColliderComponent*)> mCollisionCallback;
-        Entity* mParent;
     };
 
 } // namespace lake

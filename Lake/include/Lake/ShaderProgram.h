@@ -34,7 +34,6 @@ namespace lake {
         ShaderProgram(ShaderProgram&& other) noexcept
             : mID(other.mID)
             , mUniformLocations(std::move(other.mUniformLocations))
-            , mCombinedSourcePath(std::move(other.mCombinedSourcePath))
         {
             other.mID = GL_NONE;
         }
@@ -45,7 +44,6 @@ namespace lake {
                 other.mID = GL_NONE;
 
                 mUniformLocations = std::move(other.mUniformLocations);
-                mCombinedSourcePath = std::move(other.mCombinedSourcePath);
             }
 
             return *this;
@@ -82,9 +80,8 @@ namespace lake {
     private:
         i32 getLocation(const std::string& name) const;
 
-        u32 mID;
         std::unordered_map<std::string, i32> mUniformLocations;
-        std::string mCombinedSourcePath;
+        u32 mID;
     };
 
 } // namespace lake

@@ -52,15 +52,15 @@ namespace lake {
 
         [[nodiscard]] const u32 getID() const { return mID; }
         [[nodiscard]] const Texture* getTextureBuffer(const std::size_t index) const { return mTextureBuffers[index]; }
-        [[nodiscard]] const glm::u32vec2& getSize() const { return mSize; }
+        [[nodiscard]] const glm::u32vec2 getSize() const { return mSize; }
         [[nodiscard]] const Texture* getDepthStencil() const { return mDepthStencil; }
 
     private:
+        std::vector<Texture*> mTextureBuffers;
         u32 mID;
         glm::u32vec2 mSize;
-        std::vector<Texture*> mTextureBuffers;
         Texture* mDepthStencil;
         bool mFinalized;
     };
 
-}
+} // namespace lake

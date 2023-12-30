@@ -113,7 +113,7 @@ lake::Audio::~Audio() {
 }
 
 void lake::Audio::update(std::span<SoundComponent*> soundComponents) {
-    static const auto playSound = [this](FMOD::Sound* sound, SoundComponent* soundComponent) {
+    const auto playSound = [this](FMOD::Sound* sound, SoundComponent* soundComponent) {
         FMOD::Channel* channel = nullptr;
         mSystem->playSound(sound, nullptr, false, &channel);
         channel->setPitch(soundComponent->getPitch());

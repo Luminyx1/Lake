@@ -19,4 +19,4 @@ namespace lake {
         static u32 sQuadVBO, sQuadEBO, sQuadVAO;
     };
 
-}
+} // namespace lake

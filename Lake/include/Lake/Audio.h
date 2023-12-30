@@ -26,8 +26,8 @@ namespace lake {
         void clearCache();
 
     private:
-        FMOD::System* mSystem;
         std::unordered_map<std::pair<std::string, FMOD_MODE>, FMOD::Sound*, lake::PairHash, lake::PairEqual> mSounds;
+        FMOD::System* mSystem;
     };
 
-}
+} // namespace lake

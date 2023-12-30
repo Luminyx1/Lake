@@ -19,4 +19,4 @@ namespace lake {
         lake::ShaderProgram mShaderProgram;
     };
 
-}
+} // namespace lake

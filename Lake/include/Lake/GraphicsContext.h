@@ -137,16 +137,17 @@ namespace lake {
     private:
         bool mDepthTest;
         bool mDepthWrite;
+        bool mCullEnabled;
+        bool mBlendEnabled;
+
         DepthFunction mDepthFunction;
 
-        bool mCullEnabled;
         CullFace mCullFace;
         CullDirection mCullDirection;
 
-        bool mBlendEnabled;
         BlendFactor mSrcRGB, mSrcA;
         BlendFactor mDstRGB, mDstA;
         BlendEquation mBlendEquation;
     };
 
-}
+} // namespace lake

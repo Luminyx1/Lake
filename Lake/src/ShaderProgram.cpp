@@ -57,7 +57,6 @@ lake::ShaderProgram::Shader::~Shader() {
 lake::ShaderProgram::ShaderProgram(const std::string& vshPath, const std::string& fshPath)
     : mID(glCreateProgram())
     , mUniformLocations()
-    , mCombinedSourcePath(mCombinedSourcePath)
 {
     const Shader vsh(vshPath, GL_VERTEX_SHADER);
     const Shader fsh(fshPath, GL_FRAGMENT_SHADER);

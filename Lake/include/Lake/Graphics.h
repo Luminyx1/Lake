@@ -32,8 +32,8 @@ namespace lake {
         static glm::u32vec2 getFramebufferSize();
 
     private:
-        f32 mTimeStep, mFrameTime, mLastFrameTime;
         LayerStack* mLayerStack;
+        f32 mTimeStep, mFrameTime, mLastFrameTime;
     };
 
 
