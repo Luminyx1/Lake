@@ -42,7 +42,7 @@ namespace lake {
         void clear(const glm::u32vec4& value, const Type type, u32 drawBuffer = 0) const;
         void resize(const glm::u32vec2& size);
 
-        static [[nodiscard]] const Framebuffer* getBackbuffer();
+        [[nodiscard]] static const Framebuffer* getBackbuffer();
         // TODO: Blit as a member function?
         static void blit(const Framebuffer& src, const Framebuffer& dst, const glm::u32vec2& srcStart, const glm::u32vec2& srcEnd, const glm::u32vec2& dstStart, const glm::u32vec2& dstEnd, const u32 typeMask, const Texture::FilterMode filterMode = Texture::FilterMode::Linear);
 
